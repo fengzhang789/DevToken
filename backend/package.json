@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js"
+    "start": "npm run compile && node ./dist/src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
     "@apollo/server": "^4.11.0",
     "axios": "^1.7.7",
     "class-validator": "^0.14.1",
+    "dotenv": "^16.4.5",
     "graphql": "^16.9.0",
     "graphql-scalars": "^1.23.0",
     "reflect-metadata": "^0.2.2",

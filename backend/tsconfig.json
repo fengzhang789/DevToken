@@ -1,14 +1,40 @@
 {
   "compilerOptions": {
-    "rootDirs": ["src"],
-    "outDir": "dist",
-    "lib": ["es2020"],
-    "target": "ES2023",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "module": "Node16",
+    "target": "es2018",
+    "lib": ["es2018", "es2019", "esnext.asynciterable", "ES2020.Intl"],
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "rootDir": ".",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "importHelpers": true,
     "esModuleInterop": true,
-    "types": ["node"],
+    "strictNullChecks": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "isolatedModules": true,
+    "paths": {
+      "$generated/*": ["$generated/*"],
+      "$src/*": ["src/*"],
+      "$test/*": ["test/*"]
+    },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "types": ["node"]
+  },
+  "exclude": ["node_modules", "scripts"],
+  "include": ["$generated/**/*", "src/**/*", "test/**/*"],
+  "ts-node": {
+    "files": true,
+    "transpileOnly": true,
+    "require": ["tsconfig-paths/register"],
+    "swc": true
   }
 }
