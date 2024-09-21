@@ -26,15 +26,17 @@ const Page = () => {
   })
 
   useEffect(() => {
-    fetchAccessCode()
-  }, [fetchAccessCode])
+    if (!loading && !error) {
+      fetchAccessCode()
+    }
+  }, [])
 
   return (
     <>
       <p>page</p>
 
       <p>code:</p>
-      {data}
+      {data.getGithubAccessCode.access_token}
     </>
   )
 }
