@@ -1,0 +1,12 @@
+query GetUserRepos($access_key: String!) {
+  getUserRepos(access_key: $access_key) {
+    description
+    full_name
+    html_url
+    name
+    owner {
+      avatar_url
+      login
+    }
+  }
+}
