@@ -1,28 +1,25 @@
 "use client";
 
-import { gql, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useMemo } from 'react'
 import { useCookies } from 'react-cookie';
-
-const GET_GITHUB_ACCESS_KEY = gql`
-  mutation GithubAcccessKey($code: String!) {
-    getGithubAccessCode(code: $code) {
-      access_token
-    }
-  }
-`
+import GetGithubAccessKey from "./graphql/getGithubAccessKey.graphql"
+import GetUserRepos from "./graphql/getUserRepos.graphql"
+import { GetGithubAcccessKeyMutation, GetGithubAcccessKeyMutationVariables, GetUserReposQuery, GetUserReposQueryVariables } from '../__shared/generated/graphql.types';
 
 const Page = () => {
   const searchParams = useSearchParams();
   const [cookies, setCookie] = useCookies(['access_token'])
-  
+
   const code = useMemo(() => {
     return searchParams.get("code")
   }, [searchParams])
 
-  const [fetchAccessCode, { data, loading, error }] = useMutation(GET_GITHUB_ACCESS_KEY)
+  const [fetchAccessCode, { data, loading, error }] = useMutation<GetGithubAcccessKeyMutation, GetGithubAcccessKeyMutationVariables>(GetGithubAccessKey)
+  const [fetchUserRepos, { data: repoData, loading: repoLoading, error: repoError, called }] = useLazyQuery<GetUserReposQuery, GetUserReposQueryVariables>(GetUserRepos)
 
+  // FETCH ACCESS TOKEN IF IT DOES NOT EXIST
   useEffect(() => {
     if (code && !loading && !error && !cookies.access_token) {
       fetchAccessCode({
@@ -33,6 +30,7 @@ const Page = () => {
     }
   }, [code])
 
+  // SET ACCESS TOKEN COOKIE
   useEffect(() => {
     if (data) {
       setCookie("access_token", data.getGithubAccessCode.access_token)
@@ -40,12 +38,40 @@ const Page = () => {
     }
   }, [data, setCookie])
 
+  // FETCH USER REPOSITORIES
+  useEffect(() => {
+    if (cookies.access_token) {
+      fetchUserRepos({
+        variables: {
+          access_key: cookies.access_token
+        }
+      })
+    }
+  }, [cookies.access_token, fetchUserRepos])
+
   return (
     <>
-      <p>page</p>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>URL</th>
+          <th>Owner</th>
+        </tr>
 
-      <p>code:</p>
-      {data && data.getGithubAccessCode.access_token}
+        <tbody>
+          {repoData && repoData.getUserRepos.map((repo) => {
+            return (
+              <tr key={repo.html_url}>
+                <td>{repo.name}</td>
+                <td>{repo.description}</td>
+                <td>{repo.html_url}</td>
+                <td>{repo.owner.login}</td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
     </>
   )
 }
