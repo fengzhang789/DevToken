@@ -8,13 +8,14 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { buildSchema } from "type-graphql";
 import AuthResolver from "./resolvers/auth/index.js";
+import RepoResolver from "./resolvers/repos/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const main: () => Promise<void> = async () => {
   const schema = await buildSchema({
-    resolvers: [AuthResolver],
+    resolvers: [AuthResolver, RepoResolver],
     emitSchemaFile: path.resolve(__dirname, "schema.graphql")
   })
   

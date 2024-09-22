@@ -3,6 +3,7 @@
 import { gql, useMutation } from '@apollo/client';
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useMemo } from 'react'
+import { useCookies } from 'react-cookie';
 
 const GET_GITHUB_ACCESS_KEY = gql`
   mutation GithubAcccessKey($code: String!) {
@@ -14,29 +15,37 @@ const GET_GITHUB_ACCESS_KEY = gql`
 
 const Page = () => {
   const searchParams = useSearchParams();
+  const [cookies, setCookie] = useCookies(['access_token'])
   
   const code = useMemo(() => {
     return searchParams.get("code")
   }, [searchParams])
 
-  const [fetchAccessCode, { data, loading, error }] = useMutation(GET_GITHUB_ACCESS_KEY, {
-    variables: {
-      code: code,
-    }
-  })
+  const [fetchAccessCode, { data, loading, error }] = useMutation(GET_GITHUB_ACCESS_KEY)
 
   useEffect(() => {
-    if (!loading && !error) {
-      fetchAccessCode()
+    if (code && !loading && !error && !cookies.access_token) {
+      fetchAccessCode({
+        variables: {
+          code: code
+        }
+      })
     }
-  }, [])
+  }, [code])
+
+  useEffect(() => {
+    if (data) {
+      setCookie("access_token", data.getGithubAccessCode.access_token)
+      console.log(data)
+    }
+  }, [data, setCookie])
 
   return (
     <>
       <p>page</p>
 
       <p>code:</p>
-      {data.getGithubAccessCode.access_token}
+      {data && data.getGithubAccessCode.access_token}
     </>
   )
 }
