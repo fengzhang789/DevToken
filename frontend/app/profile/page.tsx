@@ -12,6 +12,7 @@ import {
   GetUserReposQuery,
   GetUserReposQueryVariables,
 } from "../__shared/generated/graphql.types";
+import Table from "../__shared/components/Table";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -60,30 +61,21 @@ const Page = () => {
     }
   }, [cookies.access_token, fetchUserRepos]);
 
+  const columns = [{
+      field: "name",
+      headerName: "Repo name",
+    }]
+
+  const rows = [
+    {
+      name: "hello"
+    }
+  ]
+  
+
   return (
     <>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>URL</th>
-          <th>Owner</th>
-        </tr>
-
-        <tbody>
-          {repoData &&
-            repoData.getUserRepos.map((repo) => {
-              return (
-                <tr key={repo.html_url}>
-                  <td>{repo.name}</td>
-                  <td>{repo.description}</td>
-                  <td>{repo.html_url}</td>
-                  <td>{repo.owner.login}</td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+      <Table columns={columns} rows={rows} />
     </>
   );
 };
