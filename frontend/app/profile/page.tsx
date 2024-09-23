@@ -16,6 +16,7 @@ import {
   GetUserReposQueryVariables,
 } from "../__shared/generated/graphql.types";
 import Table from "../__shared/components/Table";
+import Image from "next/image";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -107,9 +108,21 @@ const Page = () => {
       };
     }) ?? [];
 
+  if (!userData || !repoData) {
+    return "loading..."
+  }
+
   return (
     <>
-      
+      <h1>{userData.getSelfUserData.name}</h1>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="rounded-[50%] h-48" src={userData.getSelfUserData.avatar_url} alt="github profile picture" />
+
+      {userData.getSelfUserData.bio}
+
+      <h1>{userData.getSelfUserData.login}</h1>
+
+      <h1>{userData.getSelfUserData.public_repos} public repositories</h1>
       <Table columns={columns} rows={rows} />
     </>
   );
