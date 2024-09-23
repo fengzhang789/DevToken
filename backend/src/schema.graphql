@@ -18,6 +18,7 @@ type Owner {
 
 type Query {
   getOrganizationRepos(access_key: String!, organization: String!): String!
+  getUserData(accessToken: String!, username: String!): UserInformation!
   getUserRepos(access_key: String!): [RepositoryInformation!]!
   hello: String!
 }
@@ -28,4 +29,15 @@ type RepositoryInformation {
   html_url: String!
   name: String!
   owner: Owner!
+}
+
+type UserInformation {
+  avatar_url: String!
+  bio: String!
+  github_created_at: String!
+  github_updated_at: String!
+  html_url: String!
+  login: String!
+  name: String!
+  public_repos: String!
 }

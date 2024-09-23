@@ -1,5 +1,5 @@
-import { RepositoryInformation } from "$src/schemas/repository.js";
-import RepoService from "$src/services/repoService.js";
+import { RepositoryInformation } from "../../schemas/repository.js";
+import RepoService from "../../services/repoService.js";
 import { Arg, Query, Resolver } from "type-graphql";
 
 @Resolver()

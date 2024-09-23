@@ -1,4 +1,4 @@
-import AuthService from "$src/services/authService.js";
+import AuthService from "../../services/authService.js";
 import { Arg, Field, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import Auth from "../../schemas/auth.js";
 
