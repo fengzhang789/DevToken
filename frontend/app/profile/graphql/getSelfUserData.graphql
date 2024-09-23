@@ -1,0 +1,12 @@
+query getSelfUserData($accessToken: String!) {
+  getSelfUserData(accessToken: $accessToken) {
+    avatar_url
+    bio
+    login
+    html_url
+    name
+    public_repos
+    github_created_at
+    github_updated_at
+  }
+}

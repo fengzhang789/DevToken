@@ -7,7 +7,7 @@ import { Arg, Query, Resolver } from "type-graphql";
 @Resolver()
 export default class UserResolver {
   constructor(private readonly userService: UserService) {
-    this.userService = new UserService() // TODO: FIX DI
+    this.userService = new UserService(); // TODO: FIX DI
   }
 
   @Query(() => UserInformation)
@@ -16,5 +16,10 @@ export default class UserResolver {
     @Arg("username", () => String) username: string
   ) {
     return this.userService.getUserData(accessToken, username);
+  }
+
+  @Query(() => UserInformation)
+  async getSelfUserData(@Arg("accessToken", () => String) accessToken: string) {
+    return this.userService.getSelfUserData(accessToken);
   }
 }

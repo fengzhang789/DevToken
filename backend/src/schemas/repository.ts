@@ -30,3 +30,18 @@ export class RepositoryInformation {
   @Field(() => String, { nullable: true })
   description!: string;
 }
+
+@ObjectType()
+export class RepositoryContributorInformation {
+  @Field(() => Number)
+  total!: number;
+
+  @Field(() => String)
+  login!: string;
+
+  @Field(() => String)
+  avatar_url!: string
+
+  @Field(() => String)
+  html_url!: string
+}

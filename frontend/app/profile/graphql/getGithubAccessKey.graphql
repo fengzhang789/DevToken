@@ -1,4 +1,4 @@
-mutation GetGithubAcccessKey($code: String!) {
+mutation getGithubAcccessKey($code: String!) {
   getGithubAccessCode(code: $code) {
     access_token
   }

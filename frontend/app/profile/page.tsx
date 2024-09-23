@@ -4,11 +4,14 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useCookies } from "react-cookie";
-import GetGithubAccessKey from "./graphql/getGithubAccessKey.graphql";
-import GetUserRepos from "./graphql/getUserRepos.graphql";
+import getGithubAccessKey from "./graphql/getGithubAccessKey.graphql";
+import getUserRepos from "./graphql/getUserRepos.graphql";
+import getSelfUserData from "./graphql/getSelfUserData.graphql"
 import {
   GetGithubAcccessKeyMutation,
   GetGithubAcccessKeyMutationVariables,
+  GetSelfUserDataQuery,
+  GetSelfUserDataQueryVariables,
   GetUserReposQuery,
   GetUserReposQueryVariables,
 } from "../__shared/generated/graphql.types";
@@ -26,11 +29,15 @@ const Page = () => {
     useMutation<
       GetGithubAcccessKeyMutation,
       GetGithubAcccessKeyMutationVariables
-    >(GetGithubAccessKey);
+    >(getGithubAccessKey);
   const [
     fetchUserRepos,
-    { data: repoData, loading: repoLoading, error: repoError, called },
-  ] = useLazyQuery<GetUserReposQuery, GetUserReposQueryVariables>(GetUserRepos);
+    { data: repoData },
+  ] = useLazyQuery<GetUserReposQuery, GetUserReposQueryVariables>(getUserRepos);
+  const [
+    fetchSelfUserData,
+    { data: userData },
+  ] = useLazyQuery<GetSelfUserDataQuery, GetSelfUserDataQueryVariables>(getSelfUserData)
 
   // FETCH ACCESS TOKEN IF IT DOES NOT EXIST
   useEffect(() => {
@@ -60,7 +67,7 @@ const Page = () => {
     }
   }, [data, setCookie]);
 
-  // FETCH USER REPOSITORIES
+  // FETCH USER REPOSITORIES AND USER DATA
   useEffect(() => {
     if (cookies.access_token) {
       fetchUserRepos({
@@ -68,9 +75,14 @@ const Page = () => {
           access_key: cookies.access_token,
         },
       });
+      fetchSelfUserData({
+        variables: {
+          accessToken: cookies.access_token,
+        }
+      })
     }
-  }, [cookies.access_token, fetchUserRepos]);
-
+  }, [cookies.access_token, fetchUserRepos, fetchSelfUserData]);
+  
   const columns = [
     {
       field: "name",
@@ -97,6 +109,7 @@ const Page = () => {
 
   return (
     <>
+      
       <Table columns={columns} rows={rows} />
     </>
   );

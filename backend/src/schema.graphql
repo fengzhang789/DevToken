@@ -18,9 +18,18 @@ type Owner {
 
 type Query {
   getOrganizationRepos(access_key: String!, organization: String!): String!
+  getRepoContributorStats(accessToken: String!, owner: String!, repo: String!): [RepositoryContributorInformation!]!
+  getSelfUserData(accessToken: String!): UserInformation!
   getUserData(accessToken: String!, username: String!): UserInformation!
   getUserRepos(access_key: String!): [RepositoryInformation!]!
   hello: String!
+}
+
+type RepositoryContributorInformation {
+  avatar_url: String!
+  html_url: String!
+  login: String!
+  total: Float!
 }
 
 type RepositoryInformation {

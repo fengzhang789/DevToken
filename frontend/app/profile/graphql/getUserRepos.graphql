@@ -1,4 +1,4 @@
-query GetUserRepos($access_key: String!) {
+query getUserRepos($access_key: String!) {
   getUserRepos(access_key: $access_key) {
     description
     full_name

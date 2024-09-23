@@ -18,7 +18,7 @@ const __dirname = path.dirname(__filename);
 const main: () => Promise<void> = async () => {
   const schema = await buildSchema({
     resolvers: [AuthResolver, RepoResolver, UserResolver],
-    container: Container,
+    // container: Container,
     emitSchemaFile: path.resolve(__dirname, "schema.graphql"),
   });
 
