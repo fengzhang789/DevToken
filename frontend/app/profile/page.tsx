@@ -22,10 +22,11 @@ const Page = () => {
     return searchParams.get("code");
   }, [searchParams]);
 
-  const [fetchAccessCode, { data, loading, error }] = useMutation<
-    GetGithubAcccessKeyMutation,
-    GetGithubAcccessKeyMutationVariables
-  >(GetGithubAccessKey);
+  const [fetchAccessCode, { data, loading, error, called: accessCodeCalled }] =
+    useMutation<
+      GetGithubAcccessKeyMutation,
+      GetGithubAcccessKeyMutationVariables
+    >(GetGithubAccessKey);
   const [
     fetchUserRepos,
     { data: repoData, loading: repoLoading, error: repoError, called },
@@ -34,13 +35,22 @@ const Page = () => {
   // FETCH ACCESS TOKEN IF IT DOES NOT EXIST
   useEffect(() => {
     if (code && !loading && !error && !cookies.access_token) {
-      fetchAccessCode({
-        variables: {
-          code: code,
-        },
-      });
+      if (!accessCodeCalled) {
+        fetchAccessCode({
+          variables: {
+            code: code,
+          },
+        });
+      }
     }
-  }, [code]);
+  }, [
+    code,
+    loading,
+    error,
+    cookies.access_token,
+    fetchAccessCode,
+    accessCodeCalled,
+  ]);
 
   // SET ACCESS TOKEN COOKIE
   useEffect(() => {
@@ -61,17 +71,29 @@ const Page = () => {
     }
   }, [cookies.access_token, fetchUserRepos]);
 
-  const columns = [{
+  const columns = [
+    {
       field: "name",
       headerName: "Repo name",
-    }]
-
-  const rows = [
+    },
     {
-      name: "hello"
-    }
-  ]
-  
+      field: "url",
+      headerName: "URL",
+    },
+    {
+      field: "owner",
+      headerName: "Owner username",
+    },
+  ];
+
+  const rows =
+    repoData?.getUserRepos.map((repo) => {
+      return {
+        name: repo.name,
+        url: repo.html_url,
+        owner: repo.owner.login,
+      };
+    }) ?? [];
 
   return (
     <>
