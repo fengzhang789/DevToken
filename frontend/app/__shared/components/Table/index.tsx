@@ -18,37 +18,41 @@ const tableBgColor = (rowNumber: number) => {
 const Table: React.FC<Props> = ({ columns, rows, ...props }: Props) => {
   return (
     <table className="border-2 border-gray-800" {...props}>
-      <tr>
-        {columns.map((col) => {
+      <thead>
+        <tr>
+          {columns.map((col) => {
+            return (
+              <th
+                className={`border-2 border-gray-500 text-start px-2 py-2 w-[${col.width ?? "auto"}]`}
+                key={col.field}
+              >
+                {col.headerName}
+              </th>
+            );
+          })}
+        </tr>
+      </thead>
+
+      <tbody>
+        {rows.map((row, rowIndex) => {
           return (
-            <th
-              className={`border-2 border-gray-500 text-start px-2 py-2 w-[${col.width ?? "auto"}]`}
-              key={col.field}
-            >
-              {col.headerName}
-            </th>
+            <tr className={tableBgColor(rowIndex)} key={rowIndex}>
+              {columns.map((col) => {
+                if (row[col.field]) {
+                  return (
+                    <td
+                      className={"border-2 border-gray-500 text-start px-2 py-1"}
+                      key={col.field}
+                    >
+                      {row[col.field]}
+                    </td>
+                  );
+                }
+              })}
+            </tr>
           );
         })}
-      </tr>
-
-      {rows.map((row, rowIndex) => {
-        return (
-          <tr className={tableBgColor(rowIndex)} key={rowIndex}>
-            {columns.map((col) => {
-              if (row[col.field]) {
-                return (
-                  <td
-                    className={"border-2 border-gray-500 text-start px-2 py-1"}
-                    key={col.field}
-                  >
-                    {row[col.field]}
-                  </td>
-                );
-              }
-            })}
-          </tr>
-        );
-      })}
+      </tbody>
     </table>
   );
 };
