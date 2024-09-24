@@ -24,5 +24,5 @@ model Contribution {
   userId      String
   repoId      String
   commitCount Int
-  claimedAt   DateTime? @default(now())
+  claimAmount Int
 }

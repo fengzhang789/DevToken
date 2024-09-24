@@ -1,12 +1,17 @@
 "use client";
 
 import { useLazyQuery, useMutation } from "@apollo/client";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCookies } from "react-cookie";
-import getGithubAccessKey from "./graphql/getGithubAccessKey.graphql";
-import getUserRepos from "./graphql/getUserRepos.graphql";
-import getSelfUserData from "./graphql/getSelfUserData.graphql";
+import {
+  Body,
+  Heading1,
+  Heading3,
+  LargeBody
+} from "../__shared/components/Headings";
+import Table from "../__shared/components/Table";
 import {
   GetGithubAcccessKeyMutation,
   GetGithubAcccessKeyMutationVariables,
@@ -15,15 +20,18 @@ import {
   GetUserReposQuery,
   GetUserReposQueryVariables,
 } from "../__shared/generated/graphql.types";
-import Table from "../__shared/components/Table";
-import Link from "next/link";
-import {
-  Body,
-  Heading1,
-  Heading2,
-  Heading3,
-  LargeBody,
-} from "../__shared/components/Headings";
+import getGithubAccessKey from "./graphql/getGithubAccessKey.graphql";
+import getSelfUserData from "./graphql/getSelfUserData.graphql";
+import getUserRepos from "./graphql/getUserRepos.graphql";
+import { ethers } from "ethers";
+import ConnectWallet from "../__shared/components/ConnectWallet";
+
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ethereum?: any
+  }
+}
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -32,6 +40,7 @@ const Page = () => {
   const code = useMemo(() => {
     return searchParams.get("code");
   }, [searchParams]);
+
 
   const [fetchAccessCode, { data, loading, error, called: accessCodeCalled }] =
     useMutation<
@@ -131,6 +140,7 @@ const Page = () => {
 
   return (
     <section>
+      <ConnectWallet />
       <div className="flex flex-row gap-10 h-fit mb-16">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

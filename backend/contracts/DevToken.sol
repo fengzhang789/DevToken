@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT 
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.27;
 
 contract DevToken {
   address public minter;
@@ -21,5 +21,9 @@ contract DevToken {
     balances[receiver] += numTokens;
     balances[msg.sender] -= numTokens;
     emit Sent(msg.sender, receiver, numTokens);
+  }
+
+  function hello() public pure returns (string memory) {
+      return "Hello from DevToken contract";
   }
 }
