@@ -10,6 +10,7 @@ import { useQuery } from "@apollo/client";
 import { useMemo } from "react";
 import { useCookies } from "react-cookie";
 import getRepositoryContributions from "./graphql/getRepositoryContributions.graphql";
+import Link from "next/link";
 
 const Page = ({
   params,
@@ -48,7 +49,11 @@ const Page = ({
               src={params.avatar_url as string}
               alt="Github user profile"
             />
-            <Body className="font-medium">{params.name}</Body>
+            <Link href={params.html_url as string} target="_blank">
+              <Body className="font-medium underline text-blue-500">
+                {params.name}
+              </Body>
+            </Link>
           </div>
         );
       },
@@ -70,6 +75,7 @@ const Page = ({
           name: data.login,
           totalContributions: data.total,
           avatar_url: data.avatar_url,
+          html_url: data.html_url,
         };
       });
     } else {

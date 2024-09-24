@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: backendPostgreSQL
+      POSTGRES_USER: developer
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    container_name: postgresql
+    shm_size: 128mb
+    restart: always
+    ports:
+      - 5432:5432
+
+  
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  postgresdata:
