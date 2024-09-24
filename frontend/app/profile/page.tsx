@@ -6,7 +6,7 @@ import React, { useEffect, useMemo } from "react";
 import { useCookies } from "react-cookie";
 import getGithubAccessKey from "./graphql/getGithubAccessKey.graphql";
 import getUserRepos from "./graphql/getUserRepos.graphql";
-import getSelfUserData from "./graphql/getSelfUserData.graphql"
+import getSelfUserData from "./graphql/getSelfUserData.graphql";
 import {
   GetGithubAcccessKeyMutation,
   GetGithubAcccessKeyMutationVariables,
@@ -16,7 +16,14 @@ import {
   GetUserReposQueryVariables,
 } from "../__shared/generated/graphql.types";
 import Table from "../__shared/components/Table";
-import Image from "next/image";
+import Link from "next/link";
+import {
+  Body,
+  Heading1,
+  Heading2,
+  Heading3,
+  LargeBody,
+} from "../__shared/components/Headings";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -31,14 +38,14 @@ const Page = () => {
       GetGithubAcccessKeyMutation,
       GetGithubAcccessKeyMutationVariables
     >(getGithubAccessKey);
-  const [
-    fetchUserRepos,
-    { data: repoData },
-  ] = useLazyQuery<GetUserReposQuery, GetUserReposQueryVariables>(getUserRepos);
-  const [
-    fetchSelfUserData,
-    { data: userData },
-  ] = useLazyQuery<GetSelfUserDataQuery, GetSelfUserDataQueryVariables>(getSelfUserData)
+  const [fetchUserRepos, { data: repoData }] = useLazyQuery<
+    GetUserReposQuery,
+    GetUserReposQueryVariables
+  >(getUserRepos);
+  const [fetchSelfUserData, { data: userData }] = useLazyQuery<
+    GetSelfUserDataQuery,
+    GetSelfUserDataQueryVariables
+  >(getSelfUserData);
 
   // FETCH ACCESS TOKEN IF IT DOES NOT EXIST
   useEffect(() => {
@@ -79,15 +86,25 @@ const Page = () => {
       fetchSelfUserData({
         variables: {
           accessToken: cookies.access_token,
-        }
-      })
+        },
+      });
     }
   }, [cookies.access_token, fetchUserRepos, fetchSelfUserData]);
-  
+
   const columns = [
     {
       field: "name",
       headerName: "Repo name",
+      renderCell: (params: any) => {
+        return (
+          <Link
+            className="underline text-blue-500"
+            href={`dashboard/${params.owner}/${params.name}`}
+          >
+            {params.name}
+          </Link>
+        );
+      },
     },
     {
       field: "url",
@@ -109,22 +126,37 @@ const Page = () => {
     }) ?? [];
 
   if (!userData || !repoData) {
-    return "loading..."
+    return "loading...";
   }
 
   return (
-    <>
-      <h1>{userData.getSelfUserData.name}</h1>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="rounded-[50%] h-48" src={userData.getSelfUserData.avatar_url} alt="github profile picture" />
+    <section>
+      <div className="flex flex-row gap-10 h-fit mb-16">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className="rounded-[50%] h-48"
+          src={userData.getSelfUserData.avatar_url}
+          alt="github profile picture"
+        />
 
-      {userData.getSelfUserData.bio}
+        <div className="flex flex-col justify-between h-48">
+          <div>
+            <Heading1 className="pb-4">
+              {userData.getSelfUserData.login} ({userData.getSelfUserData.name})
+            </Heading1>
+            <LargeBody>{userData.getSelfUserData.bio}</LargeBody>
+          </div>
 
-      <h1>{userData.getSelfUserData.login}</h1>
+          <Body>
+            ({userData.getSelfUserData.public_repos} public repositories)
+          </Body>
+        </div>
+      </div>
 
-      <h1>{userData.getSelfUserData.public_repos} public repositories</h1>
+      <Heading3>Repositories</Heading3>
+
       <Table columns={columns} rows={rows} />
-    </>
+    </section>
   );
 };
 

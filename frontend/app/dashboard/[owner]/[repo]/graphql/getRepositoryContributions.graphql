@@ -1,0 +1,16 @@
+query getRepositoryContributions(
+  $repo: String!
+  $owner: String!
+  $accessToken: String!
+) {
+  getRepoContributorStats(
+    repo: $repo
+    owner: $owner
+    accessToken: $accessToken
+  ) {
+    total
+    login
+    avatar_url
+    html_url
+  }
+}

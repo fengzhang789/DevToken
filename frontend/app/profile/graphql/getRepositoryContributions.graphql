@@ -1,8 +1,0 @@
-query getRepositoryContributions($accessToken: String!, $owner: String!, $repo: String!) {
-  getRepoContributorStats(repo: $repo, owner: $owner, accessToken: $accessToken) {
-    total
-    login
-    avatar_url
-    html_url
-  }
-}

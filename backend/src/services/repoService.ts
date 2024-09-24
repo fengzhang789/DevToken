@@ -57,6 +57,8 @@ export default class RepoService {
       }
     );
 
+    console.log(res.data)
+
     return res.data.map(
       (contributor: {
         total: number;

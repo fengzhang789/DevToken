@@ -10,7 +10,9 @@ export class AuthResponse {
 
 @Resolver(Auth)
 export default class AuthResolver {
-  constructor (private readonly authService: AuthService) {}
+  constructor (private readonly authService: AuthService) {
+    this.authService = new AuthService()
+  }
 
   @Query(() => String)
   hello() {
