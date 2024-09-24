@@ -7,7 +7,7 @@ export const Heading1: React.FC<ComponentPropsWithoutRef<"h1">> = ({
   ...props
 }) => {
   return (
-    <h1 className={clsx("text-4xl font-bold", className)} {...props}>
+    <h1 className={clsx("text-6xl font-bold", className)} {...props}>
       {children}
     </h1>
   );

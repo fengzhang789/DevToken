@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="px-12 py-12">
+      <body>
         <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>

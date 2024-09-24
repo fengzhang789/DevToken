@@ -9,7 +9,7 @@ import {
   Body,
   Heading1,
   Heading3,
-  LargeBody
+  LargeBody,
 } from "../__shared/components/Headings";
 import Table from "../__shared/components/Table";
 import {
@@ -29,7 +29,7 @@ import ConnectWallet from "../__shared/components/ConnectWallet";
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ethereum?: any
+    ethereum?: any;
   }
 }
 
@@ -40,7 +40,6 @@ const Page = () => {
   const code = useMemo(() => {
     return searchParams.get("code");
   }, [searchParams]);
-
 
   const [fetchAccessCode, { data, loading, error, called: accessCodeCalled }] =
     useMutation<
