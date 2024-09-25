@@ -1,10 +1,8 @@
 "use client";
 
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
-import { useCookies } from "react-cookie";
+import { useEffect } from "react";
 import ConnectWallet from "../__shared/components/ConnectWallet";
 import {
   Body,
@@ -14,16 +12,14 @@ import {
 } from "../__shared/components/Headings";
 import Table from "../__shared/components/Table";
 import {
-  GetGithubAcccessKeyMutation,
-  GetGithubAcccessKeyMutationVariables,
   GetSelfUserDataQuery,
   GetSelfUserDataQueryVariables,
   GetUserReposQuery,
-  GetUserReposQueryVariables,
+  GetUserReposQueryVariables
 } from "../__shared/generated/graphql.types";
-import getGithubAccessKey from "./graphql/getGithubAccessKey.graphql";
 import getSelfUserData from "./graphql/getSelfUserData.graphql";
 import getUserRepos from "./graphql/getUserRepos.graphql";
+import { useCookies } from "react-cookie";
 
 declare global {
   interface Window {
@@ -33,18 +29,8 @@ declare global {
 }
 
 const Page = () => {
-  const searchParams = useSearchParams();
-  const [cookies, setCookie] = useCookies(["access_token"]);
-
-  const code = useMemo(() => {
-    return searchParams.get("code");
-  }, [searchParams]);
-
-  const [fetchAccessCode, { data, loading, error, called: accessCodeCalled }] =
-    useMutation<
-      GetGithubAcccessKeyMutation,
-      GetGithubAcccessKeyMutationVariables
-    >(getGithubAccessKey);
+  const [cookies] = useCookies(["access_token"])
+  
   const [fetchUserRepos, { data: repoData }] = useLazyQuery<
     GetUserReposQuery,
     GetUserReposQueryVariables
@@ -53,31 +39,6 @@ const Page = () => {
     GetSelfUserDataQuery,
     GetSelfUserDataQueryVariables
   >(getSelfUserData);
-
-  // FETCH ACCESS TOKEN IF IT DOES NOT EXIST
-  useEffect(() => {
-    if (code && !loading && !error && !cookies.access_token) {
-      if (!accessCodeCalled) {
-        fetchAccessCode({
-          variables: {
-            code: code,
-          },
-        });
-      }
-    }
-  }, [
-    code,
-    cookies.access_token,
-    fetchAccessCode,
-    accessCodeCalled,
-  ]);
-
-  // SET ACCESS TOKEN COOKIE
-  useEffect(() => {
-    if (data && data.getGithubAccessCode.access_token !== null) {
-      setCookie("access_token", data.getGithubAccessCode.access_token);
-    }
-  }, [data, setCookie]);
 
   // FETCH USER REPOSITORIES AND USER DATA
   useEffect(() => {
