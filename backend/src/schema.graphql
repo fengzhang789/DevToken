@@ -4,7 +4,7 @@
 # -----------------------------------------------
 
 type AuthResponse {
-  access_token: String!
+  access_token: String
 }
 
 type Mutation {

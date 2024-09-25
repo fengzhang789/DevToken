@@ -4,7 +4,7 @@ import Auth from "../../schemas/auth.js";
 
 @ObjectType()
 export class AuthResponse {
-  @Field(() => String)
+  @Field(() => String, {nullable: true})
   access_token!: string;
 }
 

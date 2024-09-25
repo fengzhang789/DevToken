@@ -56,8 +56,10 @@ const Page = () => {
 
   // FETCH ACCESS TOKEN IF IT DOES NOT EXIST
   useEffect(() => {
+    console.log(accessCodeCalled)
     if (code && !loading && !error && !cookies.access_token) {
       if (!accessCodeCalled) {
+        console.log("called")
         fetchAccessCode({
           variables: {
             code: code,
@@ -67,8 +69,6 @@ const Page = () => {
     }
   }, [
     code,
-    loading,
-    error,
     cookies.access_token,
     fetchAccessCode,
     accessCodeCalled,
@@ -76,9 +76,8 @@ const Page = () => {
 
   // SET ACCESS TOKEN COOKIE
   useEffect(() => {
-    if (data) {
+    if (data && data.getGithubAccessCode.access_token !== null) {
       setCookie("access_token", data.getGithubAccessCode.access_token);
-      console.log(data);
     }
   }, [data, setCookie]);
 
