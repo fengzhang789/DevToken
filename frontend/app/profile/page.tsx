@@ -3,8 +3,9 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useCookies } from "react-cookie";
+import ConnectWallet from "../__shared/components/ConnectWallet";
 import {
   Body,
   Heading1,
@@ -23,8 +24,6 @@ import {
 import getGithubAccessKey from "./graphql/getGithubAccessKey.graphql";
 import getSelfUserData from "./graphql/getSelfUserData.graphql";
 import getUserRepos from "./graphql/getUserRepos.graphql";
-import { ethers } from "ethers";
-import ConnectWallet from "../__shared/components/ConnectWallet";
 
 declare global {
   interface Window {
@@ -103,7 +102,7 @@ const Page = () => {
     {
       field: "name",
       headerName: "Repo name",
-      renderCell: (params: any) => {
+      renderCell: (params: Record<string, string | number>) => {
         return (
           <Link
             className="underline text-blue-500"

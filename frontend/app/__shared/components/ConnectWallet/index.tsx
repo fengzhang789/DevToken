@@ -5,7 +5,6 @@ const ConnectWallet: React.FC = () => {
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
-        // Request account access
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
         });
@@ -14,6 +13,9 @@ const ConnectWallet: React.FC = () => {
 
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
+
+        console.log(provider, signer)
+        console.log(account)
       } catch (error) {
         console.error("Error connecting to MetaMask:", error);
       }

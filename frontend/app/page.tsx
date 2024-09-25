@@ -44,14 +44,12 @@ export default function Home() {
       </section>
 
       <div className="flex flex-row justify-start w-[700px] mt-8">
-      <Link className="align-start" href="login">
-        <PulsatingButton className="bg-black" pulseColor="#111111">
-          Get Started
-        </PulsatingButton>
-      </Link>
+        <Link className="align-start" href="login">
+          <PulsatingButton className="bg-black" pulseColor="#111111">
+            Get Started
+          </PulsatingButton>
+        </Link>
       </div>
-      
-      
     </main>
   );
 }
