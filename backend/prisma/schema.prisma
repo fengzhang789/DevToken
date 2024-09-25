@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id          Int    @id @default(autoincrement())
-  github_id   String
+  github_id   Int
   metamask_id String
 }
 

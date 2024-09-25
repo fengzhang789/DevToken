@@ -1,3 +1,4 @@
+import prisma from "$src/prisma.js";
 import axios from "axios";
 import { Service } from "typedi";
 
@@ -58,6 +59,10 @@ export default class RepoService {
     );
 
     console.log(res.data)
+
+    // prisma.contribution.findFirst({
+    //   where: 
+    // })
 
     return res.data.map(
       (contributor: {

@@ -22,7 +22,7 @@ const Page = ({
 }) => {
   const [cookie] = useCookies(["access_token"]);
 
-  const { data: repoContributionData, loading } = useQuery<
+  const { data: repoContributionData, loading, stopPolling } = useQuery<
     GetRepositoryContributionsQuery,
     GetRepositoryContributionsQueryVariables
   >(getRepositoryContributions, {
@@ -32,6 +32,11 @@ const Page = ({
       repo: params.repo,
     },
     pollInterval: 1000,
+    onCompleted: ((data) => {
+      if (data) {
+        stopPolling()
+      }
+    })
   });
 
   console.log(repoContributionData?.getRepoContributorStats);
