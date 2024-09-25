@@ -8,5 +8,6 @@ query getSelfUserData($accessToken: String!) {
     public_repos
     github_created_at
     github_updated_at
+    github_id
   }
 }

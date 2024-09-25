@@ -2,7 +2,7 @@
 
 import { useLazyQuery } from "@apollo/client";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import ConnectWallet from "../__shared/components/ConnectWallet";
 import {
   Body,
@@ -15,11 +15,12 @@ import {
   GetSelfUserDataQuery,
   GetSelfUserDataQueryVariables,
   GetUserReposQuery,
-  GetUserReposQueryVariables
+  GetUserReposQueryVariables,
 } from "../__shared/generated/graphql.types";
 import getSelfUserData from "./graphql/getSelfUserData.graphql";
 import getUserRepos from "./graphql/getUserRepos.graphql";
 import { useCookies } from "react-cookie";
+import { UserInformationContext } from "../__shared/contexts/UserInformationContext";
 
 declare global {
   interface Window {
@@ -29,16 +30,16 @@ declare global {
 }
 
 const Page = () => {
-  const [cookies] = useCookies(["access_token"])
-  
+  const [cookies] = useCookies(["access_token"]);
+
+  const { userData } = useContext(UserInformationContext);
+
+  console.log(userData)
+
   const [fetchUserRepos, { data: repoData }] = useLazyQuery<
     GetUserReposQuery,
     GetUserReposQueryVariables
   >(getUserRepos);
-  const [fetchSelfUserData, { data: userData }] = useLazyQuery<
-    GetSelfUserDataQuery,
-    GetSelfUserDataQueryVariables
-  >(getSelfUserData);
 
   // FETCH USER REPOSITORIES AND USER DATA
   useEffect(() => {
@@ -48,13 +49,8 @@ const Page = () => {
           access_key: cookies.access_token,
         },
       });
-      fetchSelfUserData({
-        variables: {
-          accessToken: cookies.access_token,
-        },
-      });
     }
-  }, [cookies.access_token, fetchUserRepos, fetchSelfUserData]);
+  }, [cookies.access_token, fetchUserRepos]);
 
   const columns = [
     {
@@ -101,20 +97,20 @@ const Page = () => {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="rounded-[50%] h-48"
-          src={userData.getSelfUserData.avatar_url}
+          src={userData.avatar_url}
           alt="github profile picture"
         />
 
         <div className="flex flex-col justify-between h-48">
           <div>
             <Heading1 className="pb-4">
-              {userData.getSelfUserData.login} ({userData.getSelfUserData.name})
+              {userData.login} ({userData.name})
             </Heading1>
-            <LargeBody>{userData.getSelfUserData.bio}</LargeBody>
+            <LargeBody>{userData.bio}</LargeBody>
           </div>
 
           <Body>
-            ({userData.getSelfUserData.public_repos} public repositories)
+            ({userData.public_repos} public repositories)
           </Body>
         </div>
       </div>

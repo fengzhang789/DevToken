@@ -44,6 +44,7 @@ type UserInformation {
   avatar_url: String!
   bio: String!
   github_created_at: String!
+  github_id: String!
   github_updated_at: String!
   html_url: String!
   login: String!

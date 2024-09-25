@@ -1,60 +1,70 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react'
-import { useCookies } from 'react-cookie';
+"use client";
+
+import { useLazyQuery } from "@apollo/client";
+import React, { createContext, useCallback, useEffect, useMemo } from "react";
+import { useCookies } from "react-cookie";
+import {
+  GetSelfUserDataQuery,
+  GetSelfUserDataQueryVariables,
+} from "../generated/graphql.types";
+import getSelfUserData from "./graphql/getSelfUserData.graphql";
 
 type Props = {
   children: React.ReactNode;
-}
+};
 
 export type UserInformationState = {
   accessToken: string;
   metamaskAddress: string;
-  setAccessToken: React.Dispatch<React.SetStateAction<string>>
-  setMetamaskAddress: React.Dispatch<React.SetStateAction<string>>
-}
+  setMetamaskAddress: (address: string) => void;
+  userData: GetSelfUserDataQuery["getSelfUserData"] | null | undefined;
+};
 
 const INITIAL_STATE: UserInformationState = {
   accessToken: "",
   metamaskAddress: "",
-  setAccessToken: () => {},
   setMetamaskAddress: () => {},
-}
+  userData: null,
+};
 
 export const UserInformationContext = createContext(INITIAL_STATE);
 
 const UserInformationProvider = ({ children }: Props) => {
-  const [cookie, setCookie] = useCookies(["access_token"])
-  const [accessToken, setAccessToken] = useState<string>("");
-  const [metamaskAddress, setMetamaskAddress] = useState<string>("");
+  const [cookie, setCookie] = useCookies(["access_token", "metamaskAddress"]);
 
+  const [fetchSelfUserData, { data: userData }] = useLazyQuery<
+    GetSelfUserDataQuery,
+    GetSelfUserDataQueryVariables
+  >(getSelfUserData);
 
-  // IF COOKIE OF ACCESS TOKEN EXISTS, SET ACCESS TOKEN TO IT
+  const setMetamaskAddress = useCallback((address: string) => {
+    setCookie("metamaskAddress", address);
+  }, [setCookie]);
+
   useEffect(() => {
-    if (cookie.access_token !== null) {
-      setAccessToken(cookie.access_token)
+    if (cookie.access_token) {
+      fetchSelfUserData({
+        variables: {
+          accessToken: cookie.access_token,
+        },
+      });
     }
-  }, [])
-
-  // UPDATE COOKIE IF ACCESS TOKEN CHANGES
-  useEffect(() => {
-    if (accessToken !== null) {
-      setCookie("access_token", accessToken)
-    }
-  }, [accessToken, setCookie])
+  }, [cookie.access_token, fetchSelfUserData]);
 
   const returnValue: UserInformationState = useMemo(() => {
     return {
-      accessToken: accessToken,
-      metamaskAddress: metamaskAddress,
-      setAccessToken: setAccessToken,
+      accessToken: cookie.access_token,
+      metamaskAddress: cookie.metamaskAddress,
       setMetamaskAddress: setMetamaskAddress,
-    }
-  }, [accessToken, metamaskAddress, setAccessToken, setMetamaskAddress])
+      userData: userData?.getSelfUserData,
+    };
+  }, [cookie.access_token, cookie.metamaskAddress, setMetamaskAddress, userData?.getSelfUserData]);
 
   return (
     <UserInformationContext.Provider value={returnValue}>
       {children}
     </UserInformationContext.Provider>
-  )
-}
+  );
+};
 
-export default UserInformationProvider
+export default UserInformationProvider;

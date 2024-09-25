@@ -1,21 +1,29 @@
-import React from "react";
+"use client";
+
+import React, { useContext } from "react";
 import { ethers } from "ethers";
+import { UserInformationContext } from "../../contexts/UserInformationContext";
 
 const ConnectWallet: React.FC = () => {
+  const { setMetamaskAddress, metamaskAddress } = useContext(
+    UserInformationContext,
+  );
+
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
         const accounts = await window.ethereum.request({
           method: "eth_requestAccounts",
         });
+
         const account = accounts[0];
-        console.log("Connected account:", account);
+        setMetamaskAddress(account);
 
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
 
-        console.log(provider, signer)
-        console.log(account)
+        console.log(provider, signer);
+        console.log(account);
       } catch (error) {
         console.error("Error connecting to MetaMask:", error);
       }
@@ -25,12 +33,20 @@ const ConnectWallet: React.FC = () => {
   };
 
   return (
-    <button
-      onClick={connectWallet}
-      className="bg-blue-500 text-white p-2 rounded"
-    >
-      Connect MetaMask
-    </button>
+    <div>
+      {metamaskAddress ? (
+        <button className="bg-green-500 text-white p-2 rounded">
+          Connected to MetaMask
+        </button>
+      ) : (
+        <button
+          onClick={connectWallet}
+          className="bg-blue-500 text-white p-2 rounded"
+        >
+          Connect MetaMask
+        </button>
+      )}
+    </div>
   );
 };
 

@@ -2,6 +2,7 @@
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import React from "react";
+import UserInformationProvider from "./__shared/contexts/UserInformationContext";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BACKEND_URI,
@@ -13,7 +14,11 @@ type Props = {
 };
 
 const ClientWrapper = ({ children }: Props) => {
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+  return (
+    <ApolloProvider client={client}>
+      <UserInformationProvider>{children}</UserInformationProvider>
+    </ApolloProvider>
+  );
 };
 
 export default ClientWrapper;

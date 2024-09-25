@@ -23,6 +23,7 @@ export default class UserService {
       public_repos: res.data.public_repos,
       github_created_at: res.data.created_at,
       github_updated_at: res.data.updated_at,
+      github_id: res.data.id,
     }
   }
 
@@ -44,6 +45,7 @@ export default class UserService {
       public_repos: res.data.public_repos,
       github_created_at: res.data.created_at,
       github_updated_at: res.data.updated_at,
+      github_id: res.data.id,
     }
   }
 }

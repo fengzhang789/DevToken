@@ -3,7 +3,7 @@
 import React from "react";
 import ConnectWallet from "../__shared/components/ConnectWallet";
 import Card from "../__shared/components/Card";
-import GithubLogo from "../__shared/assets/github-logo.png"
+import GithubLogo from "../__shared/assets/github-logo.png";
 import Image from "next/image";
 import { Body } from "../__shared/components/Headings";
 
@@ -36,11 +36,14 @@ const Page = () => {
           >
             <div className="flex flex-row gap-2 items-center">
               <Body className="font-medium">Login with GitHub</Body>
-              <Image src={GithubLogo} className="max-h-[20px] max-w-[20px]" alt="Github logo" />
+              <Image
+                src={GithubLogo}
+                className="max-h-[20px] max-w-[20px]"
+                alt="Github logo"
+              />
             </div>
           </button>
         </div>
-        
       </Card>
     </main>
   );

@@ -1,12 +1,15 @@
 "use client";
 
-import { useMutation } from '@apollo/client';
-import { Heading3 } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
-import { useCookies } from 'react-cookie';
-import { GetGithubAcccessKeyMutation, GetGithubAcccessKeyMutationVariables } from '../__shared/generated/graphql.types';
+import { useMutation } from "@apollo/client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { useCookies } from "react-cookie";
+import {
+  GetGithubAcccessKeyMutation,
+  GetGithubAcccessKeyMutationVariables,
+} from "../__shared/generated/graphql.types";
 import getGithubAccessKey from "./graphql/getGithubAccessKey.graphql";
+import { Heading3 } from "../__shared/components/Headings";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -17,11 +20,10 @@ const Page = () => {
     return searchParams.get("code");
   }, [searchParams]);
 
-  const [fetchAccessCode, { data, called: accessCodeCalled }] =
-    useMutation<
-      GetGithubAcccessKeyMutation,
-      GetGithubAcccessKeyMutationVariables
-    >(getGithubAccessKey);
+  const [fetchAccessCode, { data, called: accessCodeCalled }] = useMutation<
+    GetGithubAcccessKeyMutation,
+    GetGithubAcccessKeyMutationVariables
+  >(getGithubAccessKey);
 
   // FETCH ACCESS TOKEN IF IT DOES NOT EXIST
   useEffect(() => {
@@ -34,29 +36,23 @@ const Page = () => {
         });
       }
     } else if (cookies.access_token !== null) {
-      router.push("/profile")
+      router.push("/profile");
     }
-  }, [
-    code,
-    cookies.access_token,
-    fetchAccessCode,
-    accessCodeCalled,
-    router
-  ]);
+  }, [code, cookies.access_token, fetchAccessCode, accessCodeCalled, router]);
 
   // SET ACCESS TOKEN COOKIE AND REDIRECT TO PROFILE
   useEffect(() => {
     if (data && data.getGithubAccessCode.access_token !== null) {
       setCookie("access_token", data.getGithubAccessCode.access_token);
-      router.push("/profile")
+      router.push("/profile");
     }
   }, [data, setCookie, router]);
 
   return (
-    <div className='flex justify-center items-center h-screen w-screen'>
+    <div className="flex justify-center items-center h-screen w-screen">
       <Heading3>Redirecting you...</Heading3>
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

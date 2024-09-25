@@ -25,4 +25,7 @@ export default class UserInformation {
 
   @Field(() => String)
   github_updated_at!: string;
+
+  @Field(() => String)
+  github_id!: string;
 }
