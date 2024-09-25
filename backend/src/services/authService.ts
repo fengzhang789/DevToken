@@ -1,3 +1,4 @@
+import prisma from "$src/prisma.js";
 import axios from "axios";
 
 export default class AuthService {
@@ -18,6 +19,29 @@ export default class AuthService {
 
     return {
       access_token
+    }
+  }
+
+  async loginOrCreateUser(githubId: number, metamaskAddress: string) {
+    try {
+      await prisma.user.upsert({
+        where: {
+          githubId: githubId,
+          metamaskAddress: metamaskAddress
+        },
+        update: {
+          metamaskAddress: metamaskAddress,
+        },
+        create: {
+          githubId: githubId,
+          metamaskAddress: metamaskAddress
+        },
+      })
+
+      return true;
+    } catch(error) {
+      console.error(error)
+      return false;
     }
   }
 }

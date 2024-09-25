@@ -9,6 +9,7 @@ type AuthResponse {
 
 type Mutation {
   getGithubAccessCode(code: String!): AuthResponse!
+  loginOrCreateUser(githubId: Float!, metamaskAddress: String!): Boolean!
 }
 
 type Owner {

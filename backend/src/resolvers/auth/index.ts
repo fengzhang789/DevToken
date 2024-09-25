@@ -23,4 +23,9 @@ export default class AuthResolver {
   async getGithubAccessCode(@Arg("code", () => String) code: string) {
     return this.authService.getGithubAccessCode(code)
   }
+
+  @Mutation(() => Boolean)
+  async loginOrCreateUser(@Arg("githubId", () => Number) githubId: number, @Arg("metamaskAddress", () => String) metamaskAddress: string) {
+    return this.authService.loginOrCreateUser(githubId, metamaskAddress)
+  }
 }
