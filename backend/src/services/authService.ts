@@ -1,4 +1,4 @@
-import prisma from "$src/prisma.js";
+import prisma from "../prisma.js";
 import axios from "axios";
 
 export default class AuthService {
