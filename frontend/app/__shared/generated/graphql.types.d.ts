@@ -25,11 +25,18 @@ export type AuthResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   getGithubAccessCode: AuthResponse;
+  loginOrCreateUser: Scalars['Boolean']['output'];
 };
 
 
 export type MutationGetGithubAccessCodeArgs = {
   code: Scalars['String']['input'];
+};
+
+
+export type MutationLoginOrCreateUserArgs = {
+  githubId: Scalars['Float']['input'];
+  metamaskAddress: Scalars['String']['input'];
 };
 
 export type Owner = {
@@ -112,7 +119,15 @@ export type GetSelfUserDataQueryVariables = Exact<{
 }>;
 
 
-export type GetSelfUserDataQuery = { __typename?: 'Query', getSelfUserData: { __typename?: 'UserInformation', avatar_url: string, bio: string, login: string, html_url: string, name: string, public_repos: string, github_created_at: string, github_updated_at: string } };
+export type GetSelfUserDataQuery = { __typename?: 'Query', getSelfUserData: { __typename?: 'UserInformation', avatar_url: string, bio: string, login: string, html_url: string, name: string, public_repos: string, github_created_at: string, github_updated_at: string, github_id: string } };
+
+export type LoginOrCreateUserMutationVariables = Exact<{
+  metamaskAddress: Scalars['String']['input'];
+  githubId: Scalars['Float']['input'];
+}>;
+
+
+export type LoginOrCreateUserMutation = { __typename?: 'Mutation', loginOrCreateUser: boolean };
 
 export type GetRepositoryContributionsQueryVariables = Exact<{
   repo: Scalars['String']['input'];
@@ -149,6 +164,7 @@ export const GetSelfUserDataDocument = gql`
     public_repos
     github_created_at
     github_updated_at
+    github_id
   }
 }
     `;
@@ -185,6 +201,38 @@ export type GetSelfUserDataQueryHookResult = ReturnType<typeof useGetSelfUserDat
 export type GetSelfUserDataLazyQueryHookResult = ReturnType<typeof useGetSelfUserDataLazyQuery>;
 export type GetSelfUserDataSuspenseQueryHookResult = ReturnType<typeof useGetSelfUserDataSuspenseQuery>;
 export type GetSelfUserDataQueryResult = Apollo.QueryResult<GetSelfUserDataQuery, GetSelfUserDataQueryVariables>;
+export const LoginOrCreateUserDocument = gql`
+    mutation loginOrCreateUser($metamaskAddress: String!, $githubId: Float!) {
+  loginOrCreateUser(metamaskAddress: $metamaskAddress, githubId: $githubId)
+}
+    `;
+export type LoginOrCreateUserMutationFn = Apollo.MutationFunction<LoginOrCreateUserMutation, LoginOrCreateUserMutationVariables>;
+
+/**
+ * __useLoginOrCreateUserMutation__
+ *
+ * To run a mutation, you first call `useLoginOrCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginOrCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginOrCreateUserMutation, { data, loading, error }] = useLoginOrCreateUserMutation({
+ *   variables: {
+ *      metamaskAddress: // value for 'metamaskAddress'
+ *      githubId: // value for 'githubId'
+ *   },
+ * });
+ */
+export function useLoginOrCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<LoginOrCreateUserMutation, LoginOrCreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginOrCreateUserMutation, LoginOrCreateUserMutationVariables>(LoginOrCreateUserDocument, options);
+      }
+export type LoginOrCreateUserMutationHookResult = ReturnType<typeof useLoginOrCreateUserMutation>;
+export type LoginOrCreateUserMutationResult = Apollo.MutationResult<LoginOrCreateUserMutation>;
+export type LoginOrCreateUserMutationOptions = Apollo.BaseMutationOptions<LoginOrCreateUserMutation, LoginOrCreateUserMutationVariables>;
 export const GetRepositoryContributionsDocument = gql`
     query getRepositoryContributions($repo: String!, $owner: String!, $accessToken: String!) {
   getRepoContributorStats(repo: $repo, owner: $owner, accessToken: $accessToken) {

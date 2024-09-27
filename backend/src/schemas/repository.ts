@@ -15,6 +15,9 @@ export default class Repository {
 
 @ObjectType()
 export class RepositoryInformation {
+  @Field(() => Number)
+  repo_id!: number;
+
   @Field(() => String)
   name!: string;
 

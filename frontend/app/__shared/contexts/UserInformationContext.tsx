@@ -1,13 +1,16 @@
 "use client";
 
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import React, { createContext, useCallback, useEffect, useMemo } from "react";
 import { useCookies } from "react-cookie";
 import {
   GetSelfUserDataQuery,
   GetSelfUserDataQueryVariables,
+  LoginOrCreateUserMutation,
+  LoginOrCreateUserMutationVariables,
 } from "../generated/graphql.types";
 import getSelfUserData from "./graphql/getSelfUserData.graphql";
+import loginOrCreateUser from "./graphql/loginOrCreateUser.graphql";
 
 type Props = {
   children: React.ReactNode;
@@ -36,6 +39,7 @@ const UserInformationProvider = ({ children }: Props) => {
     GetSelfUserDataQuery,
     GetSelfUserDataQueryVariables
   >(getSelfUserData);
+  const [createUser, { data: loginOrCreateUserData }] = useMutation<LoginOrCreateUserMutation, LoginOrCreateUserMutationVariables>(loginOrCreateUser);
 
   const setMetamaskAddress = useCallback((address: string) => {
     setCookie("metamaskAddress", address);
@@ -50,6 +54,17 @@ const UserInformationProvider = ({ children }: Props) => {
       });
     }
   }, [cookie.access_token, fetchSelfUserData]);
+
+  useEffect(() => {
+    if (cookie.access_token && cookie.metamaskAddress && userData?.getSelfUserData.github_id) {
+      createUser({
+        variables: {
+          githubId: parseInt(userData?.getSelfUserData.github_id),
+          metamaskAddress: cookie.metamaskAddress,
+        },
+      });
+    }
+  }, [cookie.access_token, cookie.metamaskAddress, createUser, userData?.getSelfUserData.github_id]);
 
   const returnValue: UserInformationState = useMemo(() => {
     return {

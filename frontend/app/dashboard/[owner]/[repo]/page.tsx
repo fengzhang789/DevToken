@@ -35,7 +35,7 @@ const Page = ({
       owner: params.owner,
       repo: params.repo,
     },
-    pollInterval: 1000,
+    pollInterval: 4000,
     onCompleted: (data) => {
       if (data) {
         stopPolling();

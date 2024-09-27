@@ -39,6 +39,7 @@ type RepositoryInformation {
   html_url: String!
   name: String!
   owner: Owner!
+  repo_id: Float!
 }
 
 type UserInformation {

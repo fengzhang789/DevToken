@@ -27,6 +27,28 @@ export default class RepoService {
     }));
   }
 
+  async getUserRepo(access_key: string, owner: string, repo: string) {
+    const res = await axios.get(
+      `https://api.github.com/repos/${owner}/${repo}`,
+      {
+        headers: {
+          Authorization: `token ${access_key}`,
+        },
+      }
+    );
+
+    return {
+      name: res.data.name,
+      full_name: res.data.full_name,
+      owner: {
+        login: res.data.owner.login,
+        avatar_url: res.data.owner.avatar_url,
+      },
+      html_url: res.data.html_url,
+      description: res.data.description,
+    };
+  }
+
   async getOrganizationRepos(access_key: string, organization: string) {
     try {
       const res = await axios.get(
@@ -58,11 +80,40 @@ export default class RepoService {
       }
     );
 
-    console.log(res.data)
+    // const repoData = await axios.get(
+    //   `https://api.github.com/repos/${owner}/${repo}`,
+    //   {
+    //     headers: {
+    //       Authorization: `token ${accessToken}`,
+    //     },
+    //   }
+    // );
 
-    // prisma.contribution.findFirst({
-    //   where: 
-    // })
+    // const userData = await axios.get(`https://api.github.com/user/${owner}`, {
+    //   headers: {
+    //     Authorization: `token ${accessToken}`,
+    //   },
+    // });
+
+    // prisma.contribution.upsert({
+    //   where: {
+    //     repoId: repoData.data.id as string,
+    //     userId: userData.data.id as string,
+    //   },
+    //   update: {
+    //     commitCount: res.data.filter(
+    //       (contributor: any) => contributor.author.login === owner
+    //     )[0].total,
+    //   },
+    //   create: {
+    //     repoId: repoData.data.id,
+    //     userId: userData.data.id,
+    //     commitCount: res.data.filter(
+    //       (contributor: any) => contributor.author.login === owner
+    //     )[0].total,
+    //     claimAmount: 0,
+    //   },
+    // });
 
     return res.data.map(
       (contributor: {

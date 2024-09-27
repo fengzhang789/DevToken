@@ -1,0 +1,3 @@
+mutation loginOrCreateUser($metamaskAddress: String!, $githubId: Float!) {
+  loginOrCreateUser(metamaskAddress: $metamaskAddress, githubId: $githubId)
+}

@@ -3,6 +3,7 @@
 import { useLazyQuery } from "@apollo/client";
 import Link from "next/link";
 import { useContext, useEffect } from "react";
+import { useCookies } from "react-cookie";
 import ConnectWallet from "../__shared/components/ConnectWallet";
 import {
   Body,
@@ -11,16 +12,12 @@ import {
   LargeBody,
 } from "../__shared/components/Headings";
 import Table from "../__shared/components/Table";
-import {
-  GetSelfUserDataQuery,
-  GetSelfUserDataQueryVariables,
-  GetUserReposQuery,
-  GetUserReposQueryVariables,
-} from "../__shared/generated/graphql.types";
-import getSelfUserData from "./graphql/getSelfUserData.graphql";
-import getUserRepos from "./graphql/getUserRepos.graphql";
-import { useCookies } from "react-cookie";
 import { UserInformationContext } from "../__shared/contexts/UserInformationContext";
+import {
+  GetUserReposQuery,
+  GetUserReposQueryVariables
+} from "../__shared/generated/graphql.types";
+import getUserRepos from "./graphql/getUserRepos.graphql";
 
 declare global {
   interface Window {
