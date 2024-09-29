@@ -39,7 +39,7 @@ const UserInformationProvider = ({ children }: Props) => {
     GetSelfUserDataQuery,
     GetSelfUserDataQueryVariables
   >(getSelfUserData);
-  const [createUser, { data: loginOrCreateUserData }] = useMutation<LoginOrCreateUserMutation, LoginOrCreateUserMutationVariables>(loginOrCreateUser);
+  const [createUser] = useMutation<LoginOrCreateUserMutation, LoginOrCreateUserMutationVariables>(loginOrCreateUser);
 
   const setMetamaskAddress = useCallback((address: string) => {
     setCookie("metamaskAddress", address);

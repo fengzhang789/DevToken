@@ -48,3 +48,18 @@ export class RepositoryContributorInformation {
   @Field(() => String)
   html_url!: string
 }
+
+@ObjectType()
+export class RepositorySelfContributionInformation {
+  @Field(() => Number)
+  commitCount!: number;
+
+  @Field(() => Number)
+  claimAmount!: number;
+
+  @Field(() => Number)
+  githubId!: number;
+
+  @Field(() => Number)
+  repoId!: number;
+}

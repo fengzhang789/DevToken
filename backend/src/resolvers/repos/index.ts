@@ -2,6 +2,7 @@ import { Arg, Query, Resolver } from "type-graphql";
 import {
   RepositoryContributorInformation,
   RepositoryInformation,
+  RepositorySelfContributionInformation,
 } from "../../schemas/repository.js";
 import RepoService from "../../services/repoService.js";
 
@@ -42,5 +43,13 @@ export default class RepoResolver {
     @Arg("repoId", () => Number) repoId: number
   ) {
     return this.repoService.getRepoContributorStats(accessToken, owner, repo, repoId, githubId);
+  }
+
+  @Query(() => RepositorySelfContributionInformation)
+  async getSelfRepoContributionStats(
+    @Arg("repoId", () => Number) repoId: number,
+    @Arg("githubId", () => Number) githubId: number
+  ) {
+    return this.repoService.getSelfRepoContributionStats(repoId, githubId);
   }
 }

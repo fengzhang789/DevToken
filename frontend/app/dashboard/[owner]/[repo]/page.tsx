@@ -52,7 +52,7 @@ const Page = ({
       githubId: parseInt(userData?.github_id ?? "0"),
     },
     skip: !repoData?.getUserRepo.repo_id || !userData?.github_id,
-    pollInterval: 4000,
+    pollInterval: 8000,
     onCompleted: (data) => {
       if (data) {
         stopPolling();

@@ -84,25 +84,23 @@ export default class RepoService {
       }
     );
 
-    prisma.contribution.upsert({
+    console.log(res.data)
+
+    const commitCount = res.data.filter((contributor: { author: { login: string } }) => {
+      return contributor.author.login === owner;
+    })[0].total;
+
+    await prisma.contribution.upsert({
       where: {
         repoId: repoId,
       },
       update: {
-        commitCount: res.data.reduce(
-          (acc: number, contributor: { total: number }) =>
-            acc + contributor.total,
-          0
-        ),
+        commitCount: commitCount
       },
       create: {
         repoId: repoId,
         githubId: githubId,
-        commitCount: res.data.reduce(
-          (acc: number, contributor: { total: number }) =>
-            acc + contributor.total,
-          0
-        ),
+        commitCount: commitCount,
         claimAmount: 0,
       },
     })
@@ -124,5 +122,18 @@ export default class RepoService {
         };
       }
     );
+  }
+
+  async getSelfRepoContributionStats(repoId: number, githubId: number) {
+    const res = await prisma.contribution.findFirst({
+      where: {
+        repoId: repoId,
+        githubId: githubId,
+      },
+    });
+
+    console.log(res);
+
+    return res;
   }
 }
