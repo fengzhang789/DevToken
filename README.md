@@ -44,10 +44,6 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -103,7 +99,7 @@ Users login using their GitHub profile via OAuth on the DevToken GitHub App. Use
 - TypeGraphQL allowed me to use Object-Oriented Programming (OOP) principles, such as classes and decorators, to define GraphQL resolvers and object models without using GraphQL SDL.
 - Services were created to abstract the business logic away from the resolver classes. These services were instantiated as singletons and injected into the corresponding resolver classes using Dependency Injection (DI).
 
-#### 2. Typescript Type Syncronization via Codegen
+#### 2. Typescript Type synchronization via Codegen
 - GraphQL Codegen by [The Guild](https://the-guild.dev/graphql/codegen) was used to automatically synchronize Typescript types between the backend and frontend, ensuring consistent API return types. This eliminated manual type definition and reduced the risk of type mismatches between client and server.
 - Apollo Client (frontend) and Apollo Server (backend) were used to handle data fetching and serving. 
 
