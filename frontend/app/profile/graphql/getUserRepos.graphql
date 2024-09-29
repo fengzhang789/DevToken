@@ -3,6 +3,7 @@ query getUserRepos($access_key: String!) {
     description
     full_name
     html_url
+    repo_id
     name
     owner {
       avatar_url

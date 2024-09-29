@@ -5,12 +5,16 @@ import Table, { TableColumnInput } from "@/app/__shared/components/Table";
 import {
   GetRepositoryContributionsQuery,
   GetRepositoryContributionsQueryVariables,
+  GetUserRepoQuery,
+  GetUserRepoQueryVariables,
 } from "@/app/__shared/generated/graphql.types";
 import { useQuery } from "@apollo/client";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useCookies } from "react-cookie";
 import getRepositoryContributions from "./graphql/getRepositoryContributions.graphql";
+import getUserRepo from "./graphql/getUserRepo.graphql";
 import Link from "next/link";
+import { UserInformationContext } from "@/app/__shared/contexts/UserInformationContext";
 
 const Page = ({
   params,
@@ -21,12 +25,22 @@ const Page = ({
   };
 }) => {
   const [cookie] = useCookies(["access_token"]);
+  const { userData } = useContext(UserInformationContext);
 
-  const {
-    data: repoContributionData,
-    loading,
-    stopPolling,
-  } = useQuery<
+  // REPOSITORY DATA
+  const { data: repoData, loading: repoLoading } = useQuery<GetUserRepoQuery, GetUserRepoQueryVariables>(
+    getUserRepo,
+    {
+      variables: {
+        accessKey: cookie.access_token,
+        owner: params.owner,
+        repo: params.repo,
+      },
+    },
+  );
+
+  // REPOSITORY CONTRIBUTIONS DATA
+  const { data: repoContributionData, loading: contributionLoading, stopPolling } = useQuery<
     GetRepositoryContributionsQuery,
     GetRepositoryContributionsQueryVariables
   >(getRepositoryContributions, {
@@ -34,7 +48,10 @@ const Page = ({
       accessToken: cookie.access_token,
       owner: params.owner,
       repo: params.repo,
+      repoId: repoData?.getUserRepo.repo_id ?? 0,
+      githubId: parseInt(userData?.github_id ?? "0"),
     },
+    skip: !repoData?.getUserRepo.repo_id || !userData?.github_id,
     pollInterval: 4000,
     onCompleted: (data) => {
       if (data) {
@@ -42,6 +59,7 @@ const Page = ({
       }
     },
   });
+  
 
   console.log(repoContributionData?.getRepoContributorStats);
 
@@ -92,7 +110,7 @@ const Page = ({
     }
   }, [repoContributionData]);
 
-  if (loading || !repoContributionData) {
+  if (repoLoading || contributionLoading || !repoContributionData) {
     return "loading...";
   }
 

@@ -51,6 +51,7 @@ export type Query = {
   getRepoContributorStats: Array<RepositoryContributorInformation>;
   getSelfUserData: UserInformation;
   getUserData: UserInformation;
+  getUserRepo: RepositoryInformation;
   getUserRepos: Array<RepositoryInformation>;
   hello: Scalars['String']['output'];
 };
@@ -64,8 +65,10 @@ export type QueryGetOrganizationReposArgs = {
 
 export type QueryGetRepoContributorStatsArgs = {
   accessToken: Scalars['String']['input'];
+  githubId: Scalars['Float']['input'];
   owner: Scalars['String']['input'];
   repo: Scalars['String']['input'];
+  repoId: Scalars['Float']['input'];
 };
 
 
@@ -77,6 +80,13 @@ export type QueryGetSelfUserDataArgs = {
 export type QueryGetUserDataArgs = {
   accessToken: Scalars['String']['input'];
   username: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserRepoArgs = {
+  access_key: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  repo: Scalars['String']['input'];
 };
 
 
@@ -99,6 +109,7 @@ export type RepositoryInformation = {
   html_url: Scalars['String']['output'];
   name: Scalars['String']['output'];
   owner: Owner;
+  repo_id: Scalars['Float']['output'];
 };
 
 export type UserInformation = {
@@ -130,6 +141,8 @@ export type LoginOrCreateUserMutationVariables = Exact<{
 export type LoginOrCreateUserMutation = { __typename?: 'Mutation', loginOrCreateUser: boolean };
 
 export type GetRepositoryContributionsQueryVariables = Exact<{
+  repoId: Scalars['Float']['input'];
+  githubId: Scalars['Float']['input'];
   repo: Scalars['String']['input'];
   owner: Scalars['String']['input'];
   accessToken: Scalars['String']['input'];
@@ -138,12 +151,21 @@ export type GetRepositoryContributionsQueryVariables = Exact<{
 
 export type GetRepositoryContributionsQuery = { __typename?: 'Query', getRepoContributorStats: Array<{ __typename?: 'RepositoryContributorInformation', total: number, login: string, avatar_url: string, html_url: string }> };
 
+export type GetUserRepoQueryVariables = Exact<{
+  repo: Scalars['String']['input'];
+  owner: Scalars['String']['input'];
+  accessKey: Scalars['String']['input'];
+}>;
+
+
+export type GetUserRepoQuery = { __typename?: 'Query', getUserRepo: { __typename?: 'RepositoryInformation', repo_id: number, name: string, full_name: string, html_url: string, description?: string | null, owner: { __typename?: 'Owner', login: string, avatar_url: string } } };
+
 export type GetUserReposQueryVariables = Exact<{
   access_key: Scalars['String']['input'];
 }>;
 
 
-export type GetUserReposQuery = { __typename?: 'Query', getUserRepos: Array<{ __typename?: 'RepositoryInformation', description?: string | null, full_name: string, html_url: string, name: string, owner: { __typename?: 'Owner', avatar_url: string, login: string } }> };
+export type GetUserReposQuery = { __typename?: 'Query', getUserRepos: Array<{ __typename?: 'RepositoryInformation', description?: string | null, full_name: string, html_url: string, repo_id: number, name: string, owner: { __typename?: 'Owner', avatar_url: string, login: string } }> };
 
 export type GetGithubAcccessKeyMutationVariables = Exact<{
   code: Scalars['String']['input'];
@@ -234,8 +256,14 @@ export type LoginOrCreateUserMutationHookResult = ReturnType<typeof useLoginOrCr
 export type LoginOrCreateUserMutationResult = Apollo.MutationResult<LoginOrCreateUserMutation>;
 export type LoginOrCreateUserMutationOptions = Apollo.BaseMutationOptions<LoginOrCreateUserMutation, LoginOrCreateUserMutationVariables>;
 export const GetRepositoryContributionsDocument = gql`
-    query getRepositoryContributions($repo: String!, $owner: String!, $accessToken: String!) {
-  getRepoContributorStats(repo: $repo, owner: $owner, accessToken: $accessToken) {
+    query getRepositoryContributions($repoId: Float!, $githubId: Float!, $repo: String!, $owner: String!, $accessToken: String!) {
+  getRepoContributorStats(
+    repoId: $repoId
+    githubId: $githubId
+    repo: $repo
+    owner: $owner
+    accessToken: $accessToken
+  ) {
     total
     login
     avatar_url
@@ -256,6 +284,8 @@ export const GetRepositoryContributionsDocument = gql`
  * @example
  * const { data, loading, error } = useGetRepositoryContributionsQuery({
  *   variables: {
+ *      repoId: // value for 'repoId'
+ *      githubId: // value for 'githubId'
  *      repo: // value for 'repo'
  *      owner: // value for 'owner'
  *      accessToken: // value for 'accessToken'
@@ -278,12 +308,63 @@ export type GetRepositoryContributionsQueryHookResult = ReturnType<typeof useGet
 export type GetRepositoryContributionsLazyQueryHookResult = ReturnType<typeof useGetRepositoryContributionsLazyQuery>;
 export type GetRepositoryContributionsSuspenseQueryHookResult = ReturnType<typeof useGetRepositoryContributionsSuspenseQuery>;
 export type GetRepositoryContributionsQueryResult = Apollo.QueryResult<GetRepositoryContributionsQuery, GetRepositoryContributionsQueryVariables>;
+export const GetUserRepoDocument = gql`
+    query getUserRepo($repo: String!, $owner: String!, $accessKey: String!) {
+  getUserRepo(repo: $repo, owner: $owner, access_key: $accessKey) {
+    repo_id
+    name
+    full_name
+    owner {
+      login
+      avatar_url
+    }
+    html_url
+    description
+  }
+}
+    `;
+
+/**
+ * __useGetUserRepoQuery__
+ *
+ * To run a query within a React component, call `useGetUserRepoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserRepoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserRepoQuery({
+ *   variables: {
+ *      repo: // value for 'repo'
+ *      owner: // value for 'owner'
+ *      accessKey: // value for 'accessKey'
+ *   },
+ * });
+ */
+export function useGetUserRepoQuery(baseOptions: Apollo.QueryHookOptions<GetUserRepoQuery, GetUserRepoQueryVariables> & ({ variables: GetUserRepoQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserRepoQuery, GetUserRepoQueryVariables>(GetUserRepoDocument, options);
+      }
+export function useGetUserRepoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserRepoQuery, GetUserRepoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserRepoQuery, GetUserRepoQueryVariables>(GetUserRepoDocument, options);
+        }
+export function useGetUserRepoSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserRepoQuery, GetUserRepoQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserRepoQuery, GetUserRepoQueryVariables>(GetUserRepoDocument, options);
+        }
+export type GetUserRepoQueryHookResult = ReturnType<typeof useGetUserRepoQuery>;
+export type GetUserRepoLazyQueryHookResult = ReturnType<typeof useGetUserRepoLazyQuery>;
+export type GetUserRepoSuspenseQueryHookResult = ReturnType<typeof useGetUserRepoSuspenseQuery>;
+export type GetUserRepoQueryResult = Apollo.QueryResult<GetUserRepoQuery, GetUserRepoQueryVariables>;
 export const GetUserReposDocument = gql`
     query getUserRepos($access_key: String!) {
   getUserRepos(access_key: $access_key) {
     description
     full_name
     html_url
+    repo_id
     name
     owner {
       avatar_url

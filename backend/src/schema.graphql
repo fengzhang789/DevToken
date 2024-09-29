@@ -19,9 +19,10 @@ type Owner {
 
 type Query {
   getOrganizationRepos(access_key: String!, organization: String!): String!
-  getRepoContributorStats(accessToken: String!, owner: String!, repo: String!): [RepositoryContributorInformation!]!
+  getRepoContributorStats(accessToken: String!, githubId: Float!, owner: String!, repo: String!, repoId: Float!): [RepositoryContributorInformation!]!
   getSelfUserData(accessToken: String!): UserInformation!
   getUserData(accessToken: String!, username: String!): UserInformation!
+  getUserRepo(access_key: String!, owner: String!, repo: String!): RepositoryInformation!
   getUserRepos(access_key: String!): [RepositoryInformation!]!
   hello: String!
 }

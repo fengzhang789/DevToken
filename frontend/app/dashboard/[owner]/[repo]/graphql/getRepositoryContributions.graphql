@@ -1,13 +1,5 @@
-query getRepositoryContributions(
-  $repo: String!
-  $owner: String!
-  $accessToken: String!
-) {
-  getRepoContributorStats(
-    repo: $repo
-    owner: $owner
-    accessToken: $accessToken
-  ) {
+query getRepositoryContributions($repoId: Float!, $githubId: Float!, $repo: String!, $owner: String!, $accessToken: String!) {
+  getRepoContributorStats(repoId: $repoId, githubId: $githubId, repo: $repo, owner: $owner, accessToken: $accessToken) {
     total
     login
     avatar_url

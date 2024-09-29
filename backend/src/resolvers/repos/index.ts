@@ -18,6 +18,15 @@ export default class RepoResolver {
     return this.repoService.getUserRepos(access_key);
   }
 
+  @Query(() => RepositoryInformation)
+  async getUserRepo(
+    @Arg("access_key", () => String) access_key: string,
+    @Arg("owner", () => String) owner: string,
+    @Arg("repo", () => String) repo: string
+  ): Promise<RepositoryInformation> {
+    return this.repoService.getUserRepo(access_key, owner, repo);
+  }
+
   @Query(() => String)
   async getOrganizationRepos(
     @Arg("access_key", () => String) access_key: string,
@@ -28,8 +37,10 @@ export default class RepoResolver {
   async getRepoContributorStats(
     @Arg("accessToken", () => String) accessToken: string,
     @Arg("owner", () => String) owner: string,
-    @Arg("repo", () => String) repo: string
+    @Arg("repo", () => String) repo: string,
+    @Arg("githubId", () => Number) githubId: number,
+    @Arg("repoId", () => Number) repoId: number
   ) {
-    return this.repoService.getRepoContributorStats(accessToken, owner, repo)
+    return this.repoService.getRepoContributorStats(accessToken, owner, repo, repoId, githubId);
   }
 }

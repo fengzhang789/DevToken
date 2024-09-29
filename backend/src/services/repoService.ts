@@ -18,6 +18,7 @@ export default class RepoService {
     return res.data.map((repo: any) => ({
       name: repo.name,
       full_name: repo.full_name,
+      repo_id: repo.id,
       owner: {
         login: repo.owner.login,
         avatar_url: repo.owner.avatar_url,
@@ -40,6 +41,7 @@ export default class RepoService {
     return {
       name: res.data.name,
       full_name: res.data.full_name,
+      repo_id: res.data.id,
       owner: {
         login: res.data.owner.login,
         avatar_url: res.data.owner.avatar_url,
@@ -69,7 +71,9 @@ export default class RepoService {
   async getRepoContributorStats(
     accessToken: string,
     owner: string,
-    repo: string
+    repo: string,
+    repoId: number,
+    githubId: number
   ) {
     const res = await axios.get(
       `https://api.github.com/repos/${owner}/${repo}/stats/contributors`,
@@ -80,40 +84,28 @@ export default class RepoService {
       }
     );
 
-    // const repoData = await axios.get(
-    //   `https://api.github.com/repos/${owner}/${repo}`,
-    //   {
-    //     headers: {
-    //       Authorization: `token ${accessToken}`,
-    //     },
-    //   }
-    // );
-
-    // const userData = await axios.get(`https://api.github.com/user/${owner}`, {
-    //   headers: {
-    //     Authorization: `token ${accessToken}`,
-    //   },
-    // });
-
-    // prisma.contribution.upsert({
-    //   where: {
-    //     repoId: repoData.data.id as string,
-    //     userId: userData.data.id as string,
-    //   },
-    //   update: {
-    //     commitCount: res.data.filter(
-    //       (contributor: any) => contributor.author.login === owner
-    //     )[0].total,
-    //   },
-    //   create: {
-    //     repoId: repoData.data.id,
-    //     userId: userData.data.id,
-    //     commitCount: res.data.filter(
-    //       (contributor: any) => contributor.author.login === owner
-    //     )[0].total,
-    //     claimAmount: 0,
-    //   },
-    // });
+    prisma.contribution.upsert({
+      where: {
+        repoId: repoId,
+      },
+      update: {
+        commitCount: res.data.reduce(
+          (acc: number, contributor: { total: number }) =>
+            acc + contributor.total,
+          0
+        ),
+      },
+      create: {
+        repoId: repoId,
+        githubId: githubId,
+        commitCount: res.data.reduce(
+          (acc: number, contributor: { total: number }) =>
+            acc + contributor.total,
+          0
+        ),
+        claimAmount: 0,
+      },
+    })
 
     return res.data.map(
       (contributor: {

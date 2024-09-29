@@ -14,15 +14,16 @@ datasource db {
 }
 
 model User {
-  id              Int    @id @default(autoincrement())
-  githubId        Int    @unique
-  metamaskAddress String 
+  githubId        Int            @id @unique
+  metamaskAddress String
+  contributions   Contribution[]
 }
 
 model Contribution {
-  id          Int    @id @default(autoincrement())
-  userId      String @unique
-  repoId      String
+  id          Int  @id @default(autoincrement())
+  githubId    Int
+  user        User @relation(fields: [githubId], references: [githubId])
+  repoId      Int  @unique
   commitCount Int
   claimAmount Int
 }

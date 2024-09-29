@@ -1,0 +1,13 @@
+query getUserRepo($repo: String!, $owner: String!, $accessKey: String!) {
+  getUserRepo(repo: $repo, owner: $owner, access_key: $accessKey) {
+    repo_id
+    name
+    full_name
+    owner {
+      login
+      avatar_url
+    }
+    html_url
+    description
+  }
+}
