@@ -1,7 +1,7 @@
 schema: "http://localhost:5000" # Replace with your GraphQL endpoint
 documents: "app/**/*.graphql" # Adjust according to your file structure
 generates:
-  app/__shared/generated/graphql.types.d.ts: # Path where the generated types will be saved
+  app/__shared/generated/graphql.types.ts: # Path where the generated types will be saved
     plugins:
       - "typescript"
       - "typescript-operations"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLazyQuery, useMutation } from "@apollo/client";
+import { ethers } from "ethers";
 import React, {
   createContext,
   useCallback,
@@ -14,10 +15,10 @@ import {
   GetSelfUserDataQueryVariables,
   LoginOrCreateUserMutation,
   LoginOrCreateUserMutationVariables,
+  useGetDevTokenAbiQuery,
 } from "../generated/graphql.types";
 import getSelfUserData from "./graphql/getSelfUserData.graphql";
 import loginOrCreateUser from "./graphql/loginOrCreateUser.graphql";
-import { ethers } from "ethers";
 
 type Props = {
   children: React.ReactNode;
@@ -53,6 +54,23 @@ const UserInformationProvider = ({ children }: Props) => {
   const [cookie, setCookie] = useCookies(["access_token", "metamaskAddress"]);
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
+
+  const { data: devTokenABI } = useGetDevTokenAbiQuery();
+
+  const contract = useMemo(() => {
+    console.log("PROVIDER", provider)
+    if (devTokenABI && provider) {
+      console.log("abi", JSON.parse(devTokenABI.getDevTokenABI))
+
+      return new ethers.Contract(
+        process.env.NEXT_PUBLIC_DEV_TOKEN_ADDRESS ?? "",
+        JSON.parse(devTokenABI.getDevTokenABI),
+        provider,
+      );
+    }
+  }, [devTokenABI, provider]);
+
+  // console.log("contract", contract)
 
   const [fetchSelfUserData, { data: userData }] = useLazyQuery<
     GetSelfUserDataQuery,

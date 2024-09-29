@@ -6,8 +6,11 @@ import Card from "../__shared/components/Card";
 import GithubLogo from "../__shared/assets/github-logo.png";
 import Image from "next/image";
 import { Body } from "../__shared/components/Headings";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+  const router = useRouter()
+
   const redirectURL = new URL("https://github.com/login/oauth/authorize");
   redirectURL.searchParams.append(
     "client_id",
@@ -32,7 +35,7 @@ const Page = () => {
           <ConnectWallet />
           <button
             className="bg-white border-black border-2 px-4 py-1 rounded-full hover:bg-slate-100"
-            onClick={() => window.open(redirectURL.toString())}
+            onClick={() => router.push(redirectURL.toString())}
           >
             <div className="flex flex-row gap-2 items-center">
               <Body className="font-medium">Login with GitHub</Body>

@@ -29,7 +29,7 @@ const Page = ({
   };
 }) => {
   const [cookie] = useCookies(["access_token"]);
-  const { userData } = useContext(UserInformationContext);
+  const { userData, provider, signer } = useContext(UserInformationContext);
 
   // REPOSITORY DATA
   const { data: repoData, loading: repoLoading } = useQuery<
@@ -94,7 +94,9 @@ const Page = ({
     }
   }, [selfRepoContributionData]);
 
-  const claimTokens = useCallback(() => {}, []);
+  const claimTokens = useCallback(() => {
+    
+  }, []);
 
   const columns: TableColumnInput = [
     {
