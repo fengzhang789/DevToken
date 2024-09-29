@@ -70,6 +70,11 @@ const Page = ({
     },
     skip: !repoData?.getUserRepo.repo_id || !userData?.github_id || !repoContributionData?.getRepoContributorStats,
   });
+
+  const canClaim = useMemo(() => {
+
+    return selfRepoContributionData.getSelfRepoContributionStats.;
+  }, [selfRepoContributionData]);
   
   const columns: TableColumnInput = [
     {

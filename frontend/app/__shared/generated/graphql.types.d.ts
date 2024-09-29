@@ -49,6 +49,7 @@ export type Query = {
   __typename?: 'Query';
   getOrganizationRepos: Scalars['String']['output'];
   getRepoContributorStats: Array<RepositoryContributorInformation>;
+  getSelfRepoContributionStats: RepositorySelfContributionInformation;
   getSelfUserData: UserInformation;
   getUserData: UserInformation;
   getUserRepo: RepositoryInformation;
@@ -68,6 +69,12 @@ export type QueryGetRepoContributorStatsArgs = {
   githubId: Scalars['Float']['input'];
   owner: Scalars['String']['input'];
   repo: Scalars['String']['input'];
+  repoId: Scalars['Float']['input'];
+};
+
+
+export type QueryGetSelfRepoContributionStatsArgs = {
+  githubId: Scalars['Float']['input'];
   repoId: Scalars['Float']['input'];
 };
 
@@ -112,6 +119,14 @@ export type RepositoryInformation = {
   repo_id: Scalars['Float']['output'];
 };
 
+export type RepositorySelfContributionInformation = {
+  __typename?: 'RepositorySelfContributionInformation';
+  claimAmount: Scalars['Float']['output'];
+  commitCount: Scalars['Float']['output'];
+  githubId: Scalars['Float']['output'];
+  repoId: Scalars['Float']['output'];
+};
+
 export type UserInformation = {
   __typename?: 'UserInformation';
   avatar_url: Scalars['String']['output'];
@@ -150,6 +165,14 @@ export type GetRepositoryContributionsQueryVariables = Exact<{
 
 
 export type GetRepositoryContributionsQuery = { __typename?: 'Query', getRepoContributorStats: Array<{ __typename?: 'RepositoryContributorInformation', total: number, login: string, avatar_url: string, html_url: string }> };
+
+export type GetSelfRepoContributionStatsQueryVariables = Exact<{
+  githubId: Scalars['Float']['input'];
+  repoId: Scalars['Float']['input'];
+}>;
+
+
+export type GetSelfRepoContributionStatsQuery = { __typename?: 'Query', getSelfRepoContributionStats: { __typename?: 'RepositorySelfContributionInformation', commitCount: number, claimAmount: number, githubId: number, repoId: number } };
 
 export type GetUserRepoQueryVariables = Exact<{
   repo: Scalars['String']['input'];
@@ -308,6 +331,50 @@ export type GetRepositoryContributionsQueryHookResult = ReturnType<typeof useGet
 export type GetRepositoryContributionsLazyQueryHookResult = ReturnType<typeof useGetRepositoryContributionsLazyQuery>;
 export type GetRepositoryContributionsSuspenseQueryHookResult = ReturnType<typeof useGetRepositoryContributionsSuspenseQuery>;
 export type GetRepositoryContributionsQueryResult = Apollo.QueryResult<GetRepositoryContributionsQuery, GetRepositoryContributionsQueryVariables>;
+export const GetSelfRepoContributionStatsDocument = gql`
+    query getSelfRepoContributionStats($githubId: Float!, $repoId: Float!) {
+  getSelfRepoContributionStats(githubId: $githubId, repoId: $repoId) {
+    commitCount
+    claimAmount
+    githubId
+    repoId
+  }
+}
+    `;
+
+/**
+ * __useGetSelfRepoContributionStatsQuery__
+ *
+ * To run a query within a React component, call `useGetSelfRepoContributionStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSelfRepoContributionStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSelfRepoContributionStatsQuery({
+ *   variables: {
+ *      githubId: // value for 'githubId'
+ *      repoId: // value for 'repoId'
+ *   },
+ * });
+ */
+export function useGetSelfRepoContributionStatsQuery(baseOptions: Apollo.QueryHookOptions<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables> & ({ variables: GetSelfRepoContributionStatsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables>(GetSelfRepoContributionStatsDocument, options);
+      }
+export function useGetSelfRepoContributionStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables>(GetSelfRepoContributionStatsDocument, options);
+        }
+export function useGetSelfRepoContributionStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables>(GetSelfRepoContributionStatsDocument, options);
+        }
+export type GetSelfRepoContributionStatsQueryHookResult = ReturnType<typeof useGetSelfRepoContributionStatsQuery>;
+export type GetSelfRepoContributionStatsLazyQueryHookResult = ReturnType<typeof useGetSelfRepoContributionStatsLazyQuery>;
+export type GetSelfRepoContributionStatsSuspenseQueryHookResult = ReturnType<typeof useGetSelfRepoContributionStatsSuspenseQuery>;
+export type GetSelfRepoContributionStatsQueryResult = Apollo.QueryResult<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables>;
 export const GetUserRepoDocument = gql`
     query getUserRepo($repo: String!, $owner: String!, $accessKey: String!) {
   getUserRepo(repo: $repo, owner: $owner, access_key: $accessKey) {
