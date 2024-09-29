@@ -18,6 +18,7 @@ type Owner {
 }
 
 type Query {
+  getDevTokenABI: String!
   getOrganizationRepos(access_key: String!, organization: String!): String!
   getRepoContributorStats(accessToken: String!, githubId: Float!, owner: String!, repo: String!, repoId: Float!): [RepositoryContributorInformation!]!
   getSelfRepoContributionStats(githubId: Float!, repoId: Float!): RepositorySelfContributionInformation!
