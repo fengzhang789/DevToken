@@ -3,7 +3,6 @@ const { ethers } = pkg;
 
 async function main() {
   const contract = await ethers.deployContract('DevToken');
-
   await contract.waitForDeployment();
 
   console.log('Contract Deployed at ' + contract.target);

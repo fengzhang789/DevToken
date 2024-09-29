@@ -94,9 +94,7 @@ const Page = ({
     }
   }, [selfRepoContributionData]);
 
-  const claimTokens = useCallback(() => {
-    
-  }, []);
+  const claimTokens = useCallback(() => {}, []);
 
   const columns: TableColumnInput = [
     {

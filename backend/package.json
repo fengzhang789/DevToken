@@ -6,7 +6,9 @@
     "compile": "tsc",
     "start": "npm run compile && node ./dist/src/index.js",
     "dev": "nodemon",
-    "hardhat-local": "npx hardhat node"
+    "hardhat-local": "npx hardhat node",
+    "hardhat-deploy-local": "npx hardhat run scripts/deploy.js --network localhost",
+    "hardhat-compile": "npx hardhat compile"
   },
   "keywords": [],
   "author": "",

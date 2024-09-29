@@ -5,9 +5,8 @@ import { ethers } from "ethers";
 import { UserInformationContext } from "../../contexts/UserInformationContext";
 
 const ConnectWallet: React.FC = () => {
-  const { setMetamaskAddress, metamaskAddress, setProvider, setSigner } = useContext(
-    UserInformationContext,
-  );
+  const { setMetamaskAddress, metamaskAddress, setProvider, setSigner } =
+    useContext(UserInformationContext);
 
   const connectWallet = async () => {
     if (window.ethereum) {

@@ -35,6 +35,7 @@ export type UserInformationState = {
   signer: ethers.JsonRpcSigner | null;
   setSigner: React.Dispatch<React.SetStateAction<ethers.JsonRpcSigner | null>>;
   userData: GetSelfUserDataQuery["getSelfUserData"] | null | undefined;
+  contract: ethers.Contract | null | undefined;
 };
 
 const INITIAL_STATE: UserInformationState = {
@@ -46,6 +47,7 @@ const INITIAL_STATE: UserInformationState = {
   signer: null,
   setSigner: () => {},
   userData: null,
+  contract: null,
 };
 
 export const UserInformationContext = createContext(INITIAL_STATE);
@@ -56,21 +58,6 @@ const UserInformationProvider = ({ children }: Props) => {
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
 
   const { data: devTokenABI } = useGetDevTokenAbiQuery();
-
-  const contract = useMemo(() => {
-    console.log("PROVIDER", provider)
-    if (devTokenABI && provider) {
-      console.log("abi", JSON.parse(devTokenABI.getDevTokenABI))
-
-      return new ethers.Contract(
-        process.env.NEXT_PUBLIC_DEV_TOKEN_ADDRESS ?? "",
-        JSON.parse(devTokenABI.getDevTokenABI),
-        provider,
-      );
-    }
-  }, [devTokenABI, provider]);
-
-  // console.log("contract", contract)
 
   const [fetchSelfUserData, { data: userData }] = useLazyQuery<
     GetSelfUserDataQuery,
@@ -87,6 +74,32 @@ const UserInformationProvider = ({ children }: Props) => {
     },
     [setCookie],
   );
+
+  useEffect(() => {
+    const connectWallet = async () => {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+
+          const account = accounts[0];
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const signer = await provider.getSigner();
+
+          setMetamaskAddress(account);
+          setProvider(provider);
+          setSigner(signer);
+        } catch (error) {
+          console.error("Error connecting to MetaMask:", error);
+        }
+      } else {
+        console.error("MetaMask is not installed. Please install it.");
+      }
+    };
+
+    connectWallet();
+  }, [setMetamaskAddress, setProvider, setSigner]);
 
   useEffect(() => {
     if (cookie.access_token) {
@@ -118,6 +131,16 @@ const UserInformationProvider = ({ children }: Props) => {
     userData?.getSelfUserData.github_id,
   ]);
 
+  const contract = useMemo(() => {
+    if (devTokenABI && provider) {
+      return new ethers.Contract(
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "",
+        JSON.parse(devTokenABI.getDevTokenABI),
+        provider,
+      );
+    }
+  }, [devTokenABI, provider]);
+
   const returnValue: UserInformationState = useMemo(() => {
     return {
       accessToken: cookie.access_token,
@@ -128,8 +151,10 @@ const UserInformationProvider = ({ children }: Props) => {
       signer,
       setSigner,
       userData: userData?.getSelfUserData,
+      contract,
     };
   }, [
+    contract,
     cookie.access_token,
     cookie.metamaskAddress,
     provider,

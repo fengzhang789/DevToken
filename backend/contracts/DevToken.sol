@@ -23,6 +23,10 @@ contract DevToken {
     emit Sent(msg.sender, receiver, numTokens);
   }
 
+  function balanceOf(address account) public view returns (uint) {
+    return balances[account];
+  }
+
   function hello() public pure returns (string memory) {
       return "Hello from DevToken contract";
   }

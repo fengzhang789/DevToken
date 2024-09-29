@@ -9,7 +9,7 @@ import { Body } from "../__shared/components/Headings";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const redirectURL = new URL("https://github.com/login/oauth/authorize");
   redirectURL.searchParams.append(
