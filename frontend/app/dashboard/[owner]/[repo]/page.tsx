@@ -32,19 +32,23 @@ const Page = ({
   const { userData } = useContext(UserInformationContext);
 
   // REPOSITORY DATA
-  const { data: repoData, loading: repoLoading } = useQuery<GetUserRepoQuery, GetUserRepoQueryVariables>(
-    getUserRepo,
-    {
-      variables: {
-        accessKey: cookie.access_token,
-        owner: params.owner,
-        repo: params.repo,
-      },
+  const { data: repoData, loading: repoLoading } = useQuery<
+    GetUserRepoQuery,
+    GetUserRepoQueryVariables
+  >(getUserRepo, {
+    variables: {
+      accessKey: cookie.access_token,
+      owner: params.owner,
+      repo: params.repo,
     },
-  );
+  });
 
   // REPOSITORY CONTRIBUTIONS DATA
-  const { data: repoContributionData, loading: contributionLoading, stopPolling } = useQuery<
+  const {
+    data: repoContributionData,
+    loading: contributionLoading,
+    stopPolling,
+  } = useQuery<
     GetRepositoryContributionsQuery,
     GetRepositoryContributionsQueryVariables
   >(getRepositoryContributions, {
@@ -65,16 +69,23 @@ const Page = ({
   });
 
   // SELF REPO CONTRIBUTION DATA
-  const { data: selfRepoContributionData } = useQuery<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables>(getSelfRepoContributionStats, {
+  const { data: selfRepoContributionData } = useQuery<
+    GetSelfRepoContributionStatsQuery,
+    GetSelfRepoContributionStatsQueryVariables
+  >(getSelfRepoContributionStats, {
     variables: {
       repoId: repoData?.getUserRepo.repo_id ?? 0,
       githubId: parseInt(userData?.github_id ?? "0"),
     },
-    skip: !repoData?.getUserRepo.repo_id || !userData?.github_id || !repoContributionData?.getRepoContributorStats,
+    skip:
+      !repoData?.getUserRepo.repo_id ||
+      !userData?.github_id ||
+      !repoContributionData?.getRepoContributorStats,
   });
 
   const canClaim: boolean = useMemo(() => {
-    const contributionStats = selfRepoContributionData?.getSelfRepoContributionStats;
+    const contributionStats =
+      selfRepoContributionData?.getSelfRepoContributionStats;
 
     if (contributionStats) {
       return contributionStats.commitCount - contributionStats.claimAmount >= 5;
@@ -83,10 +94,8 @@ const Page = ({
     }
   }, [selfRepoContributionData]);
 
-  const claimTokens = useCallback(() => {
-    
-  }, [])
-  
+  const claimTokens = useCallback(() => {}, []);
+
   const columns: TableColumnInput = [
     {
       field: "name",

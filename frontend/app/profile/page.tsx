@@ -15,7 +15,7 @@ import Table from "../__shared/components/Table";
 import { UserInformationContext } from "../__shared/contexts/UserInformationContext";
 import {
   GetUserReposQuery,
-  GetUserReposQueryVariables
+  GetUserReposQueryVariables,
 } from "../__shared/generated/graphql.types";
 import getUserRepos from "./graphql/getUserRepos.graphql";
 
@@ -31,7 +31,7 @@ const Page = () => {
 
   const { userData } = useContext(UserInformationContext);
 
-  console.log(userData)
+  console.log(userData);
 
   const [fetchUserRepos, { data: repoData }] = useLazyQuery<
     GetUserReposQuery,
@@ -106,9 +106,7 @@ const Page = () => {
             <LargeBody>{userData.bio}</LargeBody>
           </div>
 
-          <Body>
-            ({userData.public_repos} public repositories)
-          </Body>
+          <Body>({userData.public_repos} public repositories)</Body>
         </div>
       </div>
 

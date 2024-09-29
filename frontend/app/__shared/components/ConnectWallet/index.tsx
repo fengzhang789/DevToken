@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import { UserInformationContext } from "../../contexts/UserInformationContext";
 
 const ConnectWallet: React.FC = () => {
-  const { setMetamaskAddress, metamaskAddress } = useContext(
+  const { setMetamaskAddress, metamaskAddress, setProvider, setSigner } = useContext(
     UserInformationContext,
   );
 
@@ -17,10 +17,12 @@ const ConnectWallet: React.FC = () => {
         });
 
         const account = accounts[0];
-        setMetamaskAddress(account);
-
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
+
+        setMetamaskAddress(account);
+        setProvider(provider);
+        setSigner(signer);
 
         console.log(provider, signer);
         console.log(account);
