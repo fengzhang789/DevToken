@@ -1,0 +1,8 @@
+query getSelfRepoContributionStats($githubId: Float!, $repoId: Float!) {
+  getSelfRepoContributionStats(githubId: $githubId, repoId: $repoId) {
+    commitCount
+    claimAmount
+    githubId
+    repoId
+  }
+}

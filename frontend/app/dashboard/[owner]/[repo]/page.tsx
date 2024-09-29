@@ -15,6 +15,8 @@ import getRepositoryContributions from "./graphql/getRepositoryContributions.gra
 import getUserRepo from "./graphql/getUserRepo.graphql";
 import Link from "next/link";
 import { UserInformationContext } from "@/app/__shared/contexts/UserInformationContext";
+import getSelfRepoContributionStats from "./graphql/getSelfRepoContributionStats.graphql";
+import Button from "@/app/__shared/components/Button";
 
 const Page = ({
   params,
@@ -59,10 +61,16 @@ const Page = ({
       }
     },
   });
+
+  // SELF REPO CONTRIBUTION DATA
+  const { data: selfRepoContributionData } = useQuery(getSelfRepoContributionStats, {
+    variables: {
+      repoId: repoData?.getUserRepo.repo_id ?? 0,
+      githubId: parseInt(userData?.github_id ?? "0"),
+    },
+    skip: !repoData?.getUserRepo.repo_id || !userData?.github_id || !repoContributionData?.getRepoContributorStats,
+  });
   
-
-  console.log(repoContributionData?.getRepoContributorStats);
-
   const columns: TableColumnInput = [
     {
       field: "name",
@@ -118,6 +126,7 @@ const Page = ({
     <div>
       <Heading2>{params.repo} Repository Contribution Leaderboard</Heading2>
 
+      <Button>Claim 5 DevTokens</Button>
       <Table columns={columns} rows={rows} />
     </div>
   );
