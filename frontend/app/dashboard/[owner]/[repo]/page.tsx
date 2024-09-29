@@ -5,11 +5,13 @@ import Table, { TableColumnInput } from "@/app/__shared/components/Table";
 import {
   GetRepositoryContributionsQuery,
   GetRepositoryContributionsQueryVariables,
+  GetSelfRepoContributionStatsQuery,
+  GetSelfRepoContributionStatsQueryVariables,
   GetUserRepoQuery,
   GetUserRepoQueryVariables,
 } from "@/app/__shared/generated/graphql.types";
 import { useQuery } from "@apollo/client";
-import { useContext, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { useCookies } from "react-cookie";
 import getRepositoryContributions from "./graphql/getRepositoryContributions.graphql";
 import getUserRepo from "./graphql/getUserRepo.graphql";
@@ -63,7 +65,7 @@ const Page = ({
   });
 
   // SELF REPO CONTRIBUTION DATA
-  const { data: selfRepoContributionData } = useQuery(getSelfRepoContributionStats, {
+  const { data: selfRepoContributionData } = useQuery<GetSelfRepoContributionStatsQuery, GetSelfRepoContributionStatsQueryVariables>(getSelfRepoContributionStats, {
     variables: {
       repoId: repoData?.getUserRepo.repo_id ?? 0,
       githubId: parseInt(userData?.github_id ?? "0"),
@@ -71,10 +73,19 @@ const Page = ({
     skip: !repoData?.getUserRepo.repo_id || !userData?.github_id || !repoContributionData?.getRepoContributorStats,
   });
 
-  const canClaim = useMemo(() => {
+  const canClaim: boolean = useMemo(() => {
+    const contributionStats = selfRepoContributionData?.getSelfRepoContributionStats;
 
-    return selfRepoContributionData.getSelfRepoContributionStats.;
+    if (contributionStats) {
+      return contributionStats.commitCount - contributionStats.claimAmount >= 5;
+    } else {
+      return false;
+    }
   }, [selfRepoContributionData]);
+
+  const claimTokens = useCallback(() => {
+    
+  }, [])
   
   const columns: TableColumnInput = [
     {
@@ -131,7 +142,7 @@ const Page = ({
     <div>
       <Heading2>{params.repo} Repository Contribution Leaderboard</Heading2>
 
-      <Button>Claim 5 DevTokens</Button>
+      <Button disabled={canClaim}>Claim 5 DevTokens</Button>
       <Table columns={columns} rows={rows} />
     </div>
   );
