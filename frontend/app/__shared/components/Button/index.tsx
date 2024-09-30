@@ -3,9 +3,10 @@ import React, { ComponentPropsWithoutRef } from "react";
 
 type ButtonProps = ComponentPropsWithoutRef<"button"> & {
   className?: string;
+  children: React.ReactNode;
 };
 
-const Button = ({ className, ...props }: ButtonProps) => {
+const Button = ({ className, children, ...props }: ButtonProps) => {
   return (
     <button
       className={clsx(
@@ -14,7 +15,7 @@ const Button = ({ className, ...props }: ButtonProps) => {
       )}
       {...props}
     >
-      {props.children}
+      {children}
     </button>
   );
 };

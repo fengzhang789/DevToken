@@ -54,8 +54,9 @@ export const UserInformationContext = createContext(INITIAL_STATE);
 
 const UserInformationProvider = ({ children }: Props) => {
   const [cookie, setCookie] = useCookies(["access_token", "metamaskAddress"]);
-  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
+  const [provider, setProvider] = useState<ethers.JsonRpcProvider | null>(null);
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
+  const [devTokenBalance, setDevTokenBalance] = useState<number | null>(null);
 
   const { data: devTokenABI } = useGetDevTokenAbiQuery();
 
@@ -84,12 +85,16 @@ const UserInformationProvider = ({ children }: Props) => {
           });
 
           const account = accounts[0];
-          const provider = new ethers.BrowserProvider(window.ethereum);
+          // const provider = new ethers.BrowserProvider(window.ethereum);
+          const provider = new ethers.JsonRpcProvider("http://localhost:8545");
           const signer = await provider.getSigner();
 
           setMetamaskAddress(account);
           setProvider(provider);
           setSigner(signer);
+
+          const latestBlock = await provider.getBlock('latest');
+          console.log("Latest block:", latestBlock);
         } catch (error) {
           console.error("Error connecting to MetaMask:", error);
         }
@@ -132,14 +137,26 @@ const UserInformationProvider = ({ children }: Props) => {
   ]);
 
   const contract = useMemo(() => {
-    if (devTokenABI && provider) {
+    if (devTokenABI && signer) {
       return new ethers.Contract(
         process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "",
         JSON.parse(devTokenABI.getDevTokenABI),
-        provider,
+        signer,
       );
     }
-  }, [devTokenABI, provider]);
+  }, [devTokenABI, signer]);
+
+  useEffect(() => {
+    const getBalance = async () => {
+      if (contract && cookie.metamaskAddress) {
+        const balance = await contract.balanceOf(cookie.metamaskAddress);
+        setDevTokenBalance(balance);
+        console.log("Balance:", balance.toString());
+      }
+    }
+    
+    getBalance();
+  }, [contract, cookie.metamaskAddress]);
 
   const returnValue: UserInformationState = useMemo(() => {
     return {

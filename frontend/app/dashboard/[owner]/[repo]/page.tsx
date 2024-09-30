@@ -29,7 +29,7 @@ const Page = ({
   };
 }) => {
   const [cookie] = useCookies(["access_token"]);
-  const { userData, provider, signer } = useContext(UserInformationContext);
+  const { userData, contract, metamaskAddress } = useContext(UserInformationContext);
 
   // REPOSITORY DATA
   const { data: repoData, loading: repoLoading } = useQuery<
@@ -94,7 +94,12 @@ const Page = ({
     }
   }, [selfRepoContributionData]);
 
-  const claimTokens = useCallback(() => {}, []);
+  const claimTokens = useCallback(() => {
+    console.log("Claiming tokens", contract);
+    if (contract) {
+      contract.mintToken(metamaskAddress, 5);
+    }
+  }, [contract, metamaskAddress]);
 
   const columns: TableColumnInput = [
     {
@@ -147,11 +152,13 @@ const Page = ({
     return "loading...";
   }
 
+  console.log(canClaim)
+
   return (
     <div>
       <Heading2>{params.repo} Repository Contribution Leaderboard</Heading2>
 
-      <Button disabled={canClaim}>Claim 5 DevTokens</Button>
+      <Button onClick={claimTokens} disabled={!canClaim}>Claim 5 DevTokens</Button>
       <Table columns={columns} rows={rows} />
     </div>
   );
