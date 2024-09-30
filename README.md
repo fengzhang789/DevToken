@@ -54,7 +54,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-(This project is still a WIP)
+(This project is still a WIP).
+Inspired by: [GitHub Insights](https://github.com/fengzhang789/Github-Insights) and [BlockXism](https://github.com/fengzhang789/BlockXism)
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 ![image](https://github.com/user-attachments/assets/d876664a-f1b5-4bc4-aba4-dd5da477055d)
 ![image](https://github.com/user-attachments/assets/90b4221c-7087-4b5f-a415-339ab6f685db)
