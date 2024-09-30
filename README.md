@@ -11,7 +11,7 @@
   <h3 align="center"><strong>DevToken - The Developer Currency</strong></h3>
 
   <p align="center">
-    A web3 platform to be deployed on the <a href="https://polygon.technology/">Polygon Network</a> where developers can earn coins based on their GitHub contributions. DevTokens can be used to unlock profile badges to traded with fellow developers, adding a fun and interactive layer to the coding experience. 
+    A web3 platform to be deployed on <a href="https://polygon.technology/">Polygon</a>, where developers can earn coins based on their GitHub contributions. DevTokens can be used to unlock profile badges to traded with fellow developers, adding a fun and interactive layer to the coding experience. 
     <!-- <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
@@ -86,6 +86,7 @@ Users login using their GitHub profile via OAuth on the DevToken GitHub App. Use
  [![Apollo GraphQL][Apollo-GraphQL-shield]][Apollo-GraphQL-url]
  [![Tailwind][Tailwind-shield]][Tailwind-url]
  [![Ethers][Ethers-shield]][Ethers-url]
+ * Codegen by The Guild
 
 #### Backend
  [![Typescript][Typescript-shield]][Typescript-url]
@@ -97,6 +98,7 @@ Users login using their GitHub profile via OAuth on the DevToken GitHub App. Use
  [![Prisma][Prisma-shield]][Prisma-url]
  [![Postgres][Postgres-shield]][Postgres-url]
  [![Nodemon][Nodemon-shield]][Nodemon-url]
+ * Hardhat
  
 #### Misc
  [![Docker][Docker-shield]][Docker-url]
@@ -108,12 +110,15 @@ Users login using their GitHub profile via OAuth on the DevToken GitHub App. Use
 - TypeGraphQL allowed me to use Object-Oriented Programming (OOP) principles, such as classes and decorators, to define GraphQL resolvers and object models without using GraphQL SDL.
 - Services were created to abstract the business logic away from the resolver classes. These services were instantiated as singletons and injected into the corresponding resolver classes using Dependency Injection (DI).
 
-#### 2. Typescript Type synchronization via Codegen
+#### 2. Typescript Type Synchronization via Codegen
 - GraphQL Codegen by [The Guild](https://the-guild.dev/graphql/codegen) was used to automatically synchronize Typescript types between the backend and frontend, ensuring consistent API return types. This eliminated manual type definition and reduced the risk of type mismatches between client and server.
 - Apollo Client (frontend) and Apollo Server (backend) were used to handle data fetching and serving. 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+#### 3. Prisma Object Relational Model for PostgreSQL DB Interaction
+- Prisma was used to define object models for the database (`schema.prisma`) and to perform database migrations.
+- `prisma generate` updates the generated code with changes if your database schema changes - it will update `node_modules/.prisma/client`.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- GETTING STARTED -->
@@ -136,9 +141,10 @@ This is a list of items that you need to have to run this project
 2. Create a `.env` file on the root directories of `/backend` and `/frontend`. 
 - Frontend:
    ```js
-    NEXT_PUBLIC_GITHUB_CLIENT_ID="<CLIENT ID HERE>"
-    NEXT_PUBLIC_REDIRECT_URI="http://localhost:3000/redirect"
-    NEXT_PUBLIC_BACKEND_URI="http://localhost:5000/"
+  NEXT_PUBLIC_CONTRACT_ADDRESS="0x5FbDB2315678afecb367f032d93F642f64180aa3" 
+  NEXT_PUBLIC_GITHUB_CLIENT_ID="<CLIENT ID HERE>"
+  NEXT_PUBLIC_REDIRECT_URI="http://localhost:3000/redirect"
+  NEXT_PUBLIC_BACKEND_URI="http://localhost:5000/"
    ```
    
 - Backend:
@@ -150,7 +156,14 @@ This is a list of items that you need to have to run this project
   DATABASE_URL="postgresql://developer:backendPostgreSQL@localhost:5432/devtoken"
   ```
 
-3. Run `npm run dev` and `docker compose up` for the backend. Run `npm run dev` for the frontend and visit [localhost:3000](http://localhost:3000/) for the frontend, and [localhost:5000](http://localhost:5000/) for the backend Apollo explorer.
+3. Run 
+    ```js
+    npm run dev
+    docker compose up
+    npm run hardhat-local
+    npm run hardhat-deploy-local
+    ``` 
+    for the backend. Run `npm run dev` for the frontend and visit [localhost:3000](http://localhost:3000/) for the frontend, and [localhost:5000](http://localhost:5000/) for the backend Apollo explorer.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
