@@ -56,6 +56,15 @@
 
 (This project is still a WIP)
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
+![image](https://github.com/user-attachments/assets/d876664a-f1b5-4bc4-aba4-dd5da477055d)
+![image](https://github.com/user-attachments/assets/90b4221c-7087-4b5f-a415-339ab6f685db)
+![image](https://github.com/user-attachments/assets/d0a51753-6316-45a4-818e-29e953750100)
+![image](https://github.com/user-attachments/assets/8fae9b37-f591-45a4-af73-4554e15d943b)
+![image](https://github.com/user-attachments/assets/96eaeb19-0bb6-42cc-966d-f1994afb5c76)
+![image](https://github.com/user-attachments/assets/7229f231-4822-4786-a6ee-c412c55fa1e3)
+![image](https://github.com/user-attachments/assets/7108208a-57e5-4422-adbf-fc450b4a6746)
+![image](https://github.com/user-attachments/assets/4f607035-b2c3-49f2-a20a-e5489411addc)
+
 
 Inspired by platforms that reward people for working productively (pomodoro like apps), I wanted to make a similar application for rewarding developer workflows. 
 
