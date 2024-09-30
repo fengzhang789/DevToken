@@ -115,7 +115,7 @@ Users login using their GitHub profile via OAuth on the DevToken GitHub App. Use
 - GraphQL Codegen by [The Guild](https://the-guild.dev/graphql/codegen) was used to automatically synchronize Typescript types between the backend and frontend, ensuring consistent API return types. This eliminated manual type definition and reduced the risk of type mismatches between client and server.
 - Apollo Client (frontend) and Apollo Server (backend) were used to handle data fetching and serving. 
 
-#### 3. Prisma Object Relational Model for PostgreSQL DB Interaction
+#### 3. Prisma Object Relational Mapping (ORM) for PostgreSQL DB Interaction
 - Prisma was used to define object models for the database (`schema.prisma`) and to perform database migrations.
 - `prisma generate` updates the generated code with changes if your database schema changes - it will update `node_modules/.prisma/client`.
 
